@@ -19,7 +19,7 @@ const {
 
 const siteName = 'Masego Mosupye';
 const fullTitle = `${title} | ${siteName}`;
-const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://masegomosupye.com');
+const canonicalURL = new URL(Astro.url.pathname, Astro.site ?? 'https://masego.learning254.com');
 const ogImage = new URL(image, canonicalURL).href;
 
 const personSchema = {
@@ -28,7 +28,7 @@ const personSchema = {
   name: 'Masego Mosupye',
   jobTitle: 'Doctoral Researcher',
   email: 'mailto:masegomosupye@gmail.com',
-  url: 'https://masegomosupye.com',
+  url: 'https://masego.learning254.com',
   affiliation: {
     '@type': 'CollegeOrUniversity',
     name: 'World Maritime University',

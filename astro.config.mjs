@@ -3,7 +3,7 @@ import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'https://masegomosupye.com',
+  site: 'https://masego.learning254.com',
   integrations: [sitemap()],
   vite: { plugins: [tailwindcss()] },
 });

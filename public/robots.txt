@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /admin/
 
-Sitemap: https://masegomosupye.com/sitemap-index.xml
+Sitemap: https://masego.learning254.com/sitemap-index.xml
