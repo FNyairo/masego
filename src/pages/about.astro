@@ -1,0 +1,264 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+
+const focusAreas = [
+  {
+    title: 'ESG frameworks and standards',
+    copy: 'Comparative analysis of GRI, ISSB and SASB, ESRS under the CSRD, and maritime-specific instruments such as PERS, the Environmental Ship Index, and the Poseidon Principles.',
+  },
+  {
+    title: 'Sustainability management in ports',
+    copy: 'How port authorities and terminal operators plan, measure, and govern sustainability performance across environmental, social, and governance dimensions.',
+  },
+  {
+    title: 'ESG-linked maritime finance',
+    copy: 'The transmission of sustainability expectations through lenders, charterers, and investors, and the design questions raised by a maritime GHG Fund.',
+  },
+  {
+    title: 'Just transition in emerging regions',
+    copy: 'Ensuring that decarbonisation and ESG adoption support employment, skills, and community benefit rather than displacing them.',
+  },
+];
+
+const collaborators = [
+  'Port authorities and terminal operators',
+  'Shipping companies and ship managers',
+  'Maritime regulators and policy bodies',
+  'Banks, insurers, and ESG-linked finance providers',
+  'Academic researchers in sustainability and maritime studies',
+];
+
+const description =
+  'Masego Mosupye is a doctoral researcher at World Maritime University, Malmö, working on ESG frameworks and sustainability management in ports and shipping.';
+---
+
+<BaseLayout title="About the Researcher" description={description}>
+  <PageBanner
+    eyebrow="About"
+    title="Masego Mosupye"
+    subtitle="Doctoral Researcher, World Maritime University, Malmö, Sweden."
+    image="/images/banners/about.jpg"
+    fallback="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="bio-heading">
+    <div class="container about-grid">
+      <div class="about-portrait reveal">
+        <img
+          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"
+          alt="Placeholder portrait to be replaced with a photograph of Masego Mosupye"
+          width="800"
+          height="1000"
+          loading="lazy"
+        />
+        <p class="portrait-note">Portrait placeholder</p>
+      </div>
+
+      <div class="about-copy reveal">
+        <p class="eyebrow">Biography</p>
+        <h2 id="bio-heading">Research at the intersection of sustainability, shipping, and finance</h2>
+        <p>
+          Masego Mosupye is a doctoral researcher at World Maritime University, the International
+          Maritime Organization's postgraduate institution in Malmö, Sweden. Her doctoral study
+          develops a unified ESG framework for sustainability management in ports and shipping
+          companies, with particular attention to emerging maritime regions where frameworks
+          designed elsewhere fit the operating context poorly.
+        </p>
+        <p>
+          Her work is grounded in a practical question: what would it take for ESG reporting in
+          this sector to measure something that matters, consistently enough to be compared? That
+          question leads through standards analysis, materiality assessment, and the design of
+          indicators that organisations can realistically collect — and into the finance mechanisms
+          that increasingly depend on those indicators being reliable.
+        </p>
+        <p>
+          The research is comparative by design, examining ports and shipping companies in the
+          Nordic region, the European Union, Turkey, and South Africa. Alongside academic analysis,
+          it involves direct engagement with port authorities, operators, regulators, and finance
+          providers through interviews, focus groups, and validation workshops.
+        </p>
+
+        <div class="about-actions">
+          <a class="btn btn--primary" href="/contact">Contact Masego</a>
+          <a class="btn btn--outline" href="https://www.linkedin.com/in/masegomosupye/" target="_blank" rel="noopener noreferrer">
+            LinkedIn profile
+          </a>
+        </div>
+
+        <div class="profile-social">
+          <h3 class="social-label" id="about-social-label">Find Masego online</h3>
+          <SocialLinks variant="row" />
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="focus-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Research focus</p>
+        <h2 id="focus-heading">Areas of work</h2>
+      </div>
+
+      <div class="grid-auto">
+        {
+          focusAreas.map((area) => (
+            <article class="card reveal">
+              <h3>{area.title}</h3>
+              <p>{area.copy}</p>
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="affiliation-heading">
+    <div class="container two-col">
+      <div class="card reveal">
+        <p class="eyebrow">Affiliation</p>
+        <h2 id="affiliation-heading" class="panel-heading">World Maritime University</h2>
+        <p>
+          World Maritime University was established by the International Maritime Organization in
+          1983 and is based in Malmö, Sweden. It is a centre for postgraduate maritime education
+          and research, with a mandate spanning safety, security, environmental protection, and
+          sustainable shipping.
+        </p>
+        <p class="affiliation-note">
+          Views expressed on this site are the researcher's own and do not represent an
+          institutional position.
+        </p>
+      </div>
+
+      <div class="card reveal">
+        <p class="eyebrow">Collaboration</p>
+        <h2 class="panel-heading">Who the research works with</h2>
+        <ul class="dot-list">
+          {collaborators.map((item) => <li>{item}</li>)}
+        </ul>
+        <a class="btn btn--outline collaborate-btn" href="/contact">Discuss a collaboration</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .about-grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    grid-template-columns: minmax(0, 0.75fr) minmax(0, 1.25fr);
+    align-items: start;
+  }
+
+  .about-portrait {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .about-portrait img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .portrait-note {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    background: rgba(10, 31, 51, 0.82);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.75rem;
+  }
+
+  .profile-social {
+    margin-top: 1.75rem;
+  }
+
+  .social-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin-bottom: 0.75rem;
+  }
+
+  .two-col {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .panel-heading {
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+    margin-bottom: 0.9rem;
+  }
+
+  .affiliation-note {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    font-style: italic;
+    margin-bottom: 0;
+  }
+
+  .dot-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dot-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.9375rem;
+  }
+
+  .dot-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--teal-600);
+  }
+
+  .collaborate-btn {
+    margin-top: 1.25rem;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-portrait {
+      max-width: 340px;
+    }
+  }
+</style>

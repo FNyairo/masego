@@ -1,0 +1,582 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import DashboardPreview from '../components/DashboardPreview.astro';
+import KnowledgeHubPreview from '../components/KnowledgeHubPreview.astro';
+import ResearchHubCard from '../components/ResearchHubCard.astro';
+import { getCollection } from 'astro:content';
+
+const regions = (await getCollection('regions')).sort((a, b) => a.data.order - b.data.order);
+
+const hubCards = [
+  {
+    index: '01',
+    href: '/research/esg-and-ports',
+    title: 'ESG & Ports',
+    description:
+      'What ESG means in the maritime context, and the standards shaping the sector.',
+  },
+  {
+    index: '02',
+    href: '/research/regions',
+    title: 'Regions',
+    description:
+      'Nordic, European, Turkish, and South African ports — a comparative study.',
+  },
+  {
+    index: '03',
+    href: '/research/methodology',
+    title: 'Methodology & Outputs',
+    description: 'How the research is conducted, and what it produces.',
+  },
+  {
+    index: '04',
+    href: '/research/journey',
+    title: 'The Journey',
+    description:
+      'Milestones, fieldwork, conferences, and publications along the doctoral path.',
+  },
+];
+
+const pillars = [
+  {
+    letter: 'E',
+    title: 'Environmental',
+    copy: 'Emissions, air and water quality, energy transition, waste, dredging, noise, and the decarbonisation of port equipment and vessels calling at berth.',
+  },
+  {
+    letter: 'S',
+    title: 'Social',
+    copy: 'Seafarer and port worker welfare, safety, skills and training, community impact, and the distribution of benefit from port activity.',
+  },
+  {
+    letter: 'G',
+    title: 'Governance',
+    copy: 'Board oversight of sustainability, transparency, anti-corruption, data assurance, supply chain accountability, and the quality of disclosure.',
+  },
+];
+
+const description =
+  'Doctoral research by Masego Mosupye developing a unified ESG framework for sustainability management in ports and shipping in emerging maritime regions.';
+---
+
+<BaseLayout title="ESG & Sustainable Ports Research" description={description}>
+  <!-- 1. Hero -->
+  <section class="hero gradient-hero" aria-labelledby="hero-heading">
+    <div class="hero-wash" aria-hidden="true"></div>
+    <div class="container hero-inner">
+      <p class="hero-badge">
+        <span class="pulse-dot"></span>
+        <span>PhD Research · World Maritime University</span>
+      </p>
+
+      <h1 id="hero-heading">
+        A Unified ESG Framework
+        <span class="hero-sub gradient-text">for Sustainability Management in Ports &amp; Shipping</span>
+      </h1>
+
+      <p class="hero-lead">
+        The study develops multidisciplinary KPIs and materiality matrices, proposes reporting
+        mechanisms suited to ports and shipping companies, and explores the potential for a GHG
+        Fund to support a just transition — tested across four maritime regions, from the Nordic
+        benchmark to emerging maritime economies.
+      </p>
+
+      <div class="hero-actions">
+        <a class="btn btn--primary" href="/research">
+          Explore the Research
+          <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
+            <path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+        </a>
+        <a class="btn btn--ghost" href="/dashboard">Open Dashboard</a>
+      </div>
+
+      <div class="hero-regions">
+        <p class="hero-regions-label" id="focus-regions-label">Focus regions</p>
+        <ul class="chips" aria-labelledby="focus-regions-label">
+          {
+            regions.map((region) => (
+              <li>
+                <a class="chip" href={`/research/regions#${region.data.slug}`}>
+                  {region.data.name}
+                </a>
+              </li>
+            ))
+          }
+        </ul>
+      </div>
+    </div>
+
+    <div class="hero-scroll" aria-hidden="true">
+      <span class="scroll-line"></span>
+    </div>
+
+    <svg class="hero-wave" viewBox="0 0 1440 90" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+      <path d="M0 52c180 38 360 38 540 8s360-30 540 4 180 26 360 10V90H0Z" fill="#FDFCF8"></path>
+    </svg>
+  </section>
+
+  <!-- 2. Dashboard preview -->
+  <DashboardPreview />
+
+  <!-- 3. Knowledge hub preview -->
+  <KnowledgeHubPreview />
+
+  <!-- 4. Research overview -->
+  <section class="section section--soft" aria-labelledby="research-overview-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">The Research</p>
+        <h2 id="research-overview-heading">A unified ESG framework for ports and shipping</h2>
+        <p class="lead">
+          ESG expectations now reach ports and shipping companies through regulation, finance, and
+          charterers at the same time, yet the standards applied were designed for other
+          industries. This research analyses current practice across four maritime regions and
+          develops a framework built for the sector's dual footprint at sea and on land.
+        </p>
+      </div>
+
+      <div class="grid-auto">
+        {hubCards.map((card) => <ResearchHubCard {...card} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- 4b. Why this research matters -->
+  <section class="section section--navy" aria-labelledby="why-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow eyebrow--light">Why this research matters</p>
+        <h2 id="why-heading">ESG is reshaping maritime — but practices remain fragmented</h2>
+        <p class="lead why-lead">
+          Reporting obligations, carbon pricing, and finance criteria are converging on the sector,
+          while the indicators used to measure performance remain inconsistent between ports,
+          operators, and regions. Fragmentation makes comparison difficult, weakens accountability,
+          and slows access to ESG-linked capital where it is most needed.
+        </p>
+      </div>
+
+      <ul class="pillar-grid reveal">
+        {
+          pillars.map((pillar) => (
+            <li class="pillar-card">
+              <span class="pillar-letter" aria-hidden="true">
+                {pillar.letter}
+              </span>
+              <h3>{pillar.title}</h3>
+              <p>{pillar.copy}</p>
+            </li>
+          ))
+        }
+      </ul>
+
+      <div class="status-card reveal" role="status">
+        <p class="status-title">
+          <span class="pulse-dot"></span>
+          ESG Framework — Under Development
+        </p>
+        <p class="status-body">
+          The unified framework is being iteratively developed through multidisciplinary KPI
+          selection, materiality assessment, and stakeholder validation across the four focus
+          regions.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. About preview -->
+  <section class="section" aria-labelledby="about-preview-heading">
+    <div class="container about-grid">
+      <div class="about-portrait reveal">
+        <img
+          src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=800&q=80"
+          alt="Placeholder portrait to be replaced with a photograph of Masego Mosupye"
+          width="800"
+          height="1000"
+          loading="lazy"
+        />
+        <p class="portrait-note">Portrait placeholder</p>
+      </div>
+
+      <div class="about-copy reveal">
+        <p class="eyebrow">About the researcher</p>
+        <h2 id="about-preview-heading">Masego Mosupye</h2>
+        <p class="about-role">Doctoral Researcher, World Maritime University, Malmö, Sweden</p>
+        <p>
+          Masego Mosupye is a doctoral researcher at World Maritime University, where her work
+          examines how environmental, social, and governance practice can be made coherent and
+          usable across ports and shipping companies. Her research places particular weight on
+          emerging maritime regions, where ESG frameworks designed elsewhere often fit poorly.
+        </p>
+        <p>
+          The study brings together sustainability management, maritime policy, and finance,
+          drawing on document analysis, interviews, and stakeholder workshops in the Nordic region,
+          the European Union, Turkey, and South Africa.
+        </p>
+        <div class="about-actions">
+          <a class="btn btn--outline" href="/about">More about Masego</a>
+          <a class="btn btn--outline" href="https://www.linkedin.com/in/masegomosupye/" target="_blank" rel="noopener noreferrer">
+            LinkedIn profile
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. Contact / collaborate -->
+  <section class="section contact-cta" aria-labelledby="contact-cta-heading">
+    <div class="container">
+      <div class="contact-panel reveal">
+        <div>
+          <p class="eyebrow eyebrow--light">Collaborate</p>
+          <h2 id="contact-cta-heading">Working on ESG in ports or shipping?</h2>
+          <p class="contact-copy">
+            The research welcomes collaboration with port authorities, shipping companies,
+            regulators, finance providers, and fellow researchers — particularly organisations
+            willing to share ESG reporting practice or take part in validation workshops.
+          </p>
+        </div>
+        <div class="contact-actions">
+          <a class="btn btn--primary" href="/contact">Start a conversation</a>
+          <a class="btn btn--ghost" href="mailto:masegomosupye@gmail.com">masegomosupye@gmail.com</a>
+          <a class="btn btn--ghost" href="https://www.linkedin.com/in/masegomosupye/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  /* Hero */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: 100vh;
+    min-height: 100svh;
+    color: rgba(255, 255, 255, 0.86);
+    padding-block: calc(var(--header-height) + clamp(2.5rem, 6vw, 4rem)) clamp(7rem, 12vw, 10rem);
+    overflow: hidden;
+  }
+
+  /* Landscape phones are too short for a full-height hero to be usable. */
+  @media (max-height: 620px) {
+    .hero {
+      min-height: auto;
+    }
+
+    .hero-scroll {
+      display: none;
+    }
+  }
+
+  .hero-wash {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(55% 75% at 85% 12%, rgba(45, 212, 191, 0.28), transparent 62%),
+      radial-gradient(60% 70% at 5% 95%, rgba(20, 58, 92, 0.65), transparent 62%),
+      url('https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=2000&q=80') center / cover
+        no-repeat;
+    opacity: 0.99;
+  }
+
+  .hero-wash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(10, 31, 51, 0.94) 0%, rgba(15, 46, 74, 0.9) 45%, rgba(13, 148, 136, 0.78) 100%);
+  }
+
+  .hero-inner {
+    position: relative;
+    max-width: 920px;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    margin-bottom: 1.75rem;
+  }
+
+  .hero h1 {
+    color: #ffffff;
+    margin-bottom: 1.25rem;
+  }
+
+  .hero-sub {
+    display: block;
+    font-size: clamp(1.5rem, 3.4vw, 2.5rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    margin-top: 0.35rem;
+  }
+
+  .hero-lead {
+    font-size: clamp(1.0625rem, 1.75vw, 1.25rem);
+    line-height: 1.75;
+    max-width: 66ch;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: 2rem;
+  }
+
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-bottom: 2.75rem;
+  }
+
+  .hero-regions-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgba(204, 251, 241, 0.8);
+    margin-bottom: 0.75rem;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .chips li {
+    margin: 0;
+  }
+
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-pill);
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(204, 251, 241, 0.35);
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 0.875rem;
+    text-decoration: none;
+    transition: background-color 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .chip:hover,
+  .chip:focus-visible {
+    background: rgba(45, 212, 191, 0.22);
+    border-color: var(--teal-400);
+    color: #ffffff;
+    transform: translateY(-2px);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: clamp(3rem, 6vw, 4.5rem);
+    transform: translateX(-50%);
+  }
+
+  .hero-wave {
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    width: 100%;
+    height: clamp(40px, 6vw, 90px);
+    display: block;
+  }
+
+  /* Shared section heads */
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .why-lead {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  /* Pillars */
+  .pillar-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    list-style: none;
+    margin: 0 0 clamp(1.5rem, 3vw, 2rem);
+    padding: 0;
+  }
+
+  .pillar-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.5rem, 3vw, 2rem);
+    margin: 0;
+    transition: transform 0.22s ease, border-color 0.22s ease;
+  }
+
+  .pillar-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(45, 212, 191, 0.5);
+  }
+
+  .pillar-letter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--gradient-accent);
+    color: #04231f;
+    font-family: var(--font-display);
+    font-size: 1.375rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+  }
+
+  .pillar-card h3 {
+    margin-bottom: 0.5rem;
+  }
+
+  .pillar-card p {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.76);
+    margin: 0;
+  }
+
+  .status-card {
+    border-left: 4px solid var(--coral-500);
+    border-radius: var(--radius-sm);
+    background: rgba(249, 115, 22, 0.1);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    max-width: 72ch;
+  }
+
+  .status-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 0.5rem;
+  }
+
+  .status-body {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+  }
+
+  /* About preview */
+  .about-grid {
+    display: grid;
+    gap: clamp(2rem, 5vw, 3.5rem);
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    align-items: center;
+  }
+
+  .about-portrait {
+    position: relative;
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .about-portrait img {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+  }
+
+  .portrait-note {
+    position: absolute;
+    inset-inline: 0;
+    bottom: 0;
+    margin: 0;
+    padding: 0.75rem 1rem;
+    background: rgba(10, 31, 51, 0.82);
+    color: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-align: center;
+  }
+
+  .about-role {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    margin-bottom: 1rem;
+  }
+
+  .about-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+  }
+
+  @media (max-width: 860px) {
+    .about-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .about-portrait {
+      max-width: 340px;
+    }
+  }
+
+  /* Contact CTA */
+  .contact-cta {
+    padding-bottom: clamp(4rem, 9vw, 6rem);
+  }
+
+  .contact-panel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
+    gap: clamp(1.75rem, 4vw, 3rem);
+    align-items: center;
+    padding: clamp(2rem, 5vw, 3.25rem);
+    border-radius: var(--radius-xl);
+    background: var(--gradient-hero);
+    box-shadow: var(--shadow-lg);
+    color: rgba(255, 255, 255, 0.84);
+  }
+
+  .contact-panel h2 {
+    color: #ffffff;
+  }
+
+  .contact-copy {
+    max-width: 58ch;
+    margin: 0;
+  }
+
+  .contact-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  @media (max-width: 860px) {
+    .contact-panel {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

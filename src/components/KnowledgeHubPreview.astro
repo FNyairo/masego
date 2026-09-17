@@ -1,0 +1,114 @@
+---
+import { getCollection } from 'astro:content';
+
+const all = await getCollection('resources');
+const featured = all.filter((item) => item.data.featured);
+const pool = featured.length >= 3 ? featured : all;
+const items = pool.sort((a, b) => a.data.title.localeCompare(b.data.title)).slice(0, 4);
+---
+
+<section class="section" aria-labelledby="knowledge-hub-preview-heading">
+  <div class="container">
+    <div class="preview-head reveal">
+      <p class="eyebrow">ESG Knowledge Hub</p>
+      <h2 id="knowledge-hub-preview-heading">Curated resources for maritime ESG</h2>
+      <p class="lead">
+        Standards, reports, tools, and readings — organised for researchers and practitioners.
+      </p>
+    </div>
+
+    <ul class="resource-grid reveal">
+      {
+        items.map((item) => (
+          <li class="resource-card card card--link">
+            <span class="badge">{item.data.category}</span>
+            <h3 class="resource-title">
+              <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                {item.data.title}
+                <span class="sr-only"> (opens in a new tab)</span>
+              </a>
+            </h3>
+            <p class="resource-source">{item.data.source}</p>
+            <p class="resource-desc">{item.data.description}</p>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="preview-actions reveal">
+      <a class="btn btn--outline" href="/knowledge-hub">
+        Browse the hub
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
+          <path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .preview-head {
+    max-width: 62ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .resource-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .resource-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    margin: 0;
+  }
+
+  .resource-title {
+    font-size: 1.125rem;
+    margin: 0.65rem 0 0.15rem;
+  }
+
+  .resource-title a {
+    color: var(--navy-900);
+    text-decoration: none;
+  }
+
+  .resource-title a:hover {
+    color: var(--teal-700);
+    text-decoration: underline;
+  }
+
+  .resource-source {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    margin: 0 0 0.5rem;
+  }
+
+  .resource-desc {
+    font-size: 0.9375rem;
+    color: var(--slate-600);
+    margin: 0;
+  }
+
+  .preview-actions {
+    margin-top: clamp(1.75rem, 3vw, 2.25rem);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

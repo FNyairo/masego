@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+
+const links = [
+  { href: '/research', label: 'Research overview' },
+  { href: '/research/regions', label: 'Regions' },
+  { href: '/dashboard', label: 'ESG Dashboard' },
+  { href: '/knowledge-hub', label: 'ESG Knowledge Hub' },
+  { href: '/about', label: 'About the researcher' },
+  { href: '/contact', label: 'Contact' },
+];
+---
+
+<BaseLayout
+  title="Page not found"
+  description="The page you were looking for could not be found. Browse the doctoral research, the four focus regions, the ESG dashboard, or the knowledge hub instead."
+>
+  <PageBanner
+    eyebrow="Error 404"
+    title="That page could not be found"
+    subtitle="The address may have changed, or the page may never have existed. The links below cover the main sections of the site."
+    fallback=""
+  />
+
+  <section class="section" aria-labelledby="notfound-heading">
+    <div class="container container--narrow">
+      <h2 id="notfound-heading" class="links-heading">Try one of these</h2>
+      <ul class="link-list">
+        {links.map((link) => <li><a href={link.href}>{link.label}</a></li>)}
+      </ul>
+      <a class="btn btn--primary home-btn" href="/">Back to the homepage</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .links-heading {
+    font-size: clamp(1.25rem, 2vw, 1.625rem);
+  }
+
+  .link-list {
+    list-style: none;
+    margin: 0 0 1.75rem;
+    padding: 0;
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+
+  .link-list li {
+    margin: 0;
+  }
+
+  .link-list a {
+    display: block;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--slate-100);
+    background: #ffffff;
+    color: var(--navy-800);
+    font-weight: 500;
+    text-decoration: none;
+    transition: border-color 0.18s ease, transform 0.18s ease;
+  }
+
+  .link-list a:hover {
+    border-color: var(--teal-400);
+    transform: translateY(-2px);
+  }
+</style>

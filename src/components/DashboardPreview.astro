@@ -1,0 +1,222 @@
+---
+const kpis = [
+  { value: '4', label: 'Focus Regions', detail: 'Nordic, EU, Turkey, South Africa' },
+  { value: '20', label: 'Ports Profiled', detail: 'Five ports in each focus region' },
+  { value: '9', label: 'ESG Frameworks Mapped', detail: 'Global, maritime, sectoral, regional' },
+];
+
+const scores = [
+  { region: 'Nordic', value: 85 },
+  { region: 'European Ports (EU)', value: 78 },
+  { region: 'Turkey', value: 52 },
+  { region: 'South Africa', value: 45 },
+];
+---
+
+<section class="section section--soft" aria-labelledby="dashboard-preview-heading">
+  <div class="container">
+    <div class="preview-head reveal">
+      <p class="eyebrow">ESG Dashboard</p>
+      <h2 id="dashboard-preview-heading">Explore the data behind the research</h2>
+      <p class="lead">
+        An interactive view of ESG indicators, materiality, and regional comparisons — currently
+        illustrative while the framework is under development.
+      </p>
+    </div>
+
+    <ul class="kpi-grid reveal">
+      {
+        kpis.map((kpi) => (
+          <li class="kpi-card card">
+            <span class="kpi-value">{kpi.value}</span>
+            <span class="kpi-label">{kpi.label}</span>
+            <span class="kpi-detail">{kpi.detail}</span>
+          </li>
+        ))
+      }
+    </ul>
+
+    <figure class="chart-card card reveal">
+      <figcaption class="chart-head">
+        <div>
+          <h3 class="chart-title">Regional ESG adoption scores</h3>
+          <p class="chart-sub">Composite score across disclosure, environmental action, and governance (0–100)</p>
+        </div>
+        <span class="badge badge--coral"><span class="pulse-dot"></span>Illustrative — in development</span>
+      </figcaption>
+
+      <ul class="bar-chart">
+        {
+          scores.map((row) => (
+            <li class="bar-row">
+              <span class="bar-label">{row.region}</span>
+              <span class="bar-track">
+                <span class="bar-fill" style={`--bar-width:${row.value}%`} />
+              </span>
+              <span class="bar-value">{row.value}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </figure>
+
+    <div class="preview-actions reveal">
+      <a class="btn btn--primary" href="/dashboard">
+        Open full dashboard
+        <svg viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" focusable="false">
+          <path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+        </svg>
+      </a>
+      <p class="preview-note">Full interactive explorer coming as the research progresses.</p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .preview-head {
+    max-width: 62ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .kpi-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    list-style: none;
+    margin: 0 0 clamp(1.25rem, 2.5vw, 1.75rem);
+    padding: 0;
+  }
+
+  .kpi-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin: 0;
+  }
+
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: clamp(2.5rem, 4.5vw, 3.25rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--navy-900);
+  }
+
+  .kpi-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    margin-top: 0.4rem;
+  }
+
+  .kpi-detail {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+  }
+
+  .chart-card {
+    margin: 0;
+  }
+
+  .chart-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .chart-title {
+    margin-bottom: 0.2rem;
+  }
+
+  .chart-sub {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    margin: 0;
+  }
+
+  .bar-chart {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: minmax(120px, 190px) 1fr 3ch;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 0;
+  }
+
+  .bar-label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--navy-800);
+  }
+
+  .bar-track {
+    display: block;
+    height: 14px;
+    border-radius: 999px;
+    background: var(--slate-100);
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    display: block;
+    height: 100%;
+    width: var(--bar-width);
+    border-radius: 999px;
+    background: var(--gradient-accent);
+  }
+
+  .bar-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--navy-900);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .preview-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem 1.5rem;
+    margin-top: clamp(1.75rem, 3vw, 2.25rem);
+  }
+
+  .preview-note {
+    font-size: 0.875rem;
+    font-style: italic;
+    color: var(--slate-500);
+    margin: 0;
+  }
+
+  @media (max-width: 540px) {
+    .bar-row {
+      grid-template-columns: 1fr 3ch;
+      grid-template-areas:
+        'label value'
+        'track track';
+      gap: 0.4rem 0.75rem;
+    }
+
+    .bar-label {
+      grid-area: label;
+    }
+
+    .bar-value {
+      grid-area: value;
+    }
+
+    .bar-track {
+      grid-area: track;
+    }
+  }
+</style>

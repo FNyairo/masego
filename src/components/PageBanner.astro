@@ -1,0 +1,102 @@
+---
+/**
+ * Medium page banner used on every page except the homepage.
+ *
+ * The background is layered: the local image first, a stock photograph second,
+ * and the navy gradient underneath. A missing or broken local file simply is not
+ * painted, so the next layer shows through — no code change needed when the real
+ * photographs are dropped into public/images/banners/.
+ */
+interface Props {
+  eyebrow: string;
+  title: string;
+  subtitle?: string;
+  image?: string;
+  fallback?: string;
+}
+
+const DEFAULT_FALLBACK = 'https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=2000&q=80';
+
+const { eyebrow, title, subtitle, image, fallback = DEFAULT_FALLBACK } = Astro.props;
+
+const layers = [image ? `url('${image}')` : null, fallback ? `url('${fallback}')` : null]
+  .filter(Boolean)
+  .join(', ');
+---
+
+<section class="page-banner">
+  {layers && <div class="banner-media" style={`background-image: ${layers};`} aria-hidden="true" />}
+  <div class="banner-overlay" aria-hidden="true"></div>
+
+  <div class="container banner-inner">
+    <p class="eyebrow eyebrow--light">{eyebrow}</p>
+    <h1>{title}</h1>
+    {subtitle && <p class="banner-lead">{subtitle}</p>}
+    <slot />
+  </div>
+
+  <svg class="banner-wave" viewBox="0 0 1440 70" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <path d="M0 40c180 30 360 30 540 6s360-24 540 3 180 20 360 8V70H0Z" fill="#FDFCF8"></path>
+  </svg>
+</section>
+
+<style>
+  .page-banner {
+    position: relative;
+    isolation: isolate;
+    display: flex;
+    align-items: center;
+    min-height: clamp(320px, 45vh, 440px);
+    padding-block: calc(var(--header-height) + 1.5rem) clamp(3rem, 6vw, 4rem);
+    background: var(--gradient-hero);
+    color: rgba(255, 255, 255, 0.86);
+    overflow: hidden;
+  }
+
+  .banner-media {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    mix-blend-mode: luminosity;
+  }
+
+  .banner-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(10, 31, 51, 0.55) 0%, rgba(10, 31, 51, 0.85) 100%);
+  }
+
+  .banner-inner {
+    position: relative;
+    max-width: 880px;
+  }
+
+  .page-banner h1 {
+    color: #ffffff;
+    font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+    letter-spacing: -0.015em;
+    margin-bottom: 0.75rem;
+  }
+
+  .banner-lead {
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.7;
+    max-width: 68ch;
+    color: rgba(255, 255, 255, 0.86);
+    margin: 0;
+  }
+
+  .banner-wave {
+    position: absolute;
+    inset-inline: 0;
+    bottom: -1px;
+    width: 100%;
+    height: clamp(32px, 4.5vw, 70px);
+    display: block;
+  }
+</style>

@@ -1,0 +1,268 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { getCollection } from 'astro:content';
+
+const resources = (await getCollection('resources')).sort((a, b) =>
+  a.data.title.localeCompare(b.data.title)
+);
+
+const categories = Array.from(new Set(resources.map((item) => item.data.category))).sort();
+
+const description =
+  'A curated hub of maritime ESG resources: standards, reports, tools, datasets, and readings for researchers, port authorities, and shipping companies.';
+---
+
+<BaseLayout title="ESG Knowledge Hub" description={description}>
+  <PageBanner
+    eyebrow="ESG Knowledge Hub"
+    title="Curated resources for maritime ESG"
+    subtitle="Standards, reports, tools, and readings — organised for researchers and practitioners working on sustainability in ports and shipping."
+    image="/images/banners/knowledge-hub.jpg"
+    fallback="https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="resources-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Browse</p>
+        <h2 id="resources-heading">Standards, reports, and tools</h2>
+        <p class="lead">
+          Each entry links to the original source. The collection is maintained alongside the
+          research and grows as new standards and guidance are published.
+        </p>
+      </div>
+
+      <div class="filter-bar reveal">
+        <h3 class="filter-label" id="filter-label">Filter by category</h3>
+        <div class="filter-buttons" role="group" aria-labelledby="filter-label">
+          <button type="button" class="filter-btn is-active" data-filter="all" aria-pressed="true">
+            All
+          </button>
+          {
+            categories.map((category) => (
+              <button type="button" class="filter-btn" data-filter={category} aria-pressed="false">
+                {category}
+              </button>
+            ))
+          }
+        </div>
+        <p class="filter-status" id="filter-status" role="status" aria-live="polite">
+          Showing all {resources.length} resources
+        </p>
+      </div>
+
+      <ul class="resource-grid" id="resource-grid">
+        {
+          resources.map((item) => (
+            <li class="resource-card card card--link reveal" data-category={item.data.category}>
+              <div class="resource-head">
+                <span class="badge">{item.data.category}</span>
+                {item.data.featured && <span class="badge badge--outline">Featured</span>}
+              </div>
+              <h3 class="resource-title">
+                <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                  {item.data.title}
+                  <span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </h3>
+              <p class="resource-source">{item.data.source}</p>
+              <p class="resource-desc">{item.data.description}</p>
+              {item.data.tags.length > 0 && (
+                <ul class="tag-list">
+                  {item.data.tags.map((tag) => (
+                    <li>{tag}</li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="suggest-heading">
+    <div class="container container--narrow reveal">
+      <p class="eyebrow">Contribute</p>
+      <h2 id="suggest-heading">Know a resource that belongs here?</h2>
+      <p class="lead">
+        Suggestions for standards, datasets, and practitioner guidance are welcome, particularly
+        material covering ESG practice in emerging maritime regions.
+      </p>
+      <a class="btn btn--primary" href="/contact">Suggest a resource</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    const buttons = document.querySelectorAll('.filter-btn');
+    const cards = document.querySelectorAll('#resource-grid > li');
+    const status = document.getElementById('filter-status');
+    const total = cards.length;
+
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const filter = button.dataset.filter;
+        let shown = 0;
+
+        buttons.forEach(function (other) {
+          const active = other === button;
+          other.classList.toggle('is-active', active);
+          other.setAttribute('aria-pressed', active ? 'true' : 'false');
+        });
+
+        cards.forEach(function (card) {
+          const match = filter === 'all' || card.dataset.category === filter;
+          card.hidden = !match;
+          if (match) shown += 1;
+        });
+
+        if (status) {
+          status.textContent =
+            filter === 'all'
+              ? 'Showing all ' + total + ' resources'
+              : 'Showing ' + shown + ' ' + filter.toLowerCase() + (shown === 1 ? ' resource' : ' resources');
+        }
+      });
+    });
+  })();
+</script>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.25rem);
+  }
+
+  .filter-bar {
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .filter-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin-bottom: 0.75rem;
+  }
+
+  .filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .filter-btn {
+    padding: 0.45rem 1rem;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--slate-100);
+    background: #ffffff;
+    color: var(--slate-600);
+    font-family: inherit;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+  }
+
+  .filter-btn:hover {
+    border-color: var(--teal-400);
+    color: var(--navy-800);
+  }
+
+  .filter-btn.is-active {
+    background: var(--navy-900);
+    border-color: var(--navy-900);
+    color: #ffffff;
+  }
+
+  .filter-status {
+    font-size: 0.8125rem;
+    color: var(--slate-500);
+    margin: 0.85rem 0 0;
+  }
+
+  .resource-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .resource-card {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .resource-head {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .resource-title {
+    font-size: 1.125rem;
+    margin-bottom: 0.15rem;
+  }
+
+  .resource-title a {
+    color: var(--navy-900);
+    text-decoration: none;
+  }
+
+  .resource-title a:hover {
+    color: var(--teal-700);
+    text-decoration: underline;
+  }
+
+  .resource-source {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    margin-bottom: 0.6rem;
+  }
+
+  .resource-desc {
+    font-size: 0.9375rem;
+    flex: 1;
+    margin-bottom: 1rem;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .tag-list li {
+    margin: 0;
+    padding: 0.2rem 0.6rem;
+    border-radius: var(--radius-pill);
+    background: var(--slate-100);
+    color: var(--slate-600);
+    font-size: 0.75rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

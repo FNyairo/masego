@@ -1,0 +1,314 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import ResearchHubCard from '../../components/ResearchHubCard.astro';
+
+const hubCards = [
+  {
+    index: '01',
+    href: '/research/esg-and-ports',
+    title: 'ESG & Ports',
+    description: 'What ESG means in the maritime context, and the standards shaping the sector.',
+  },
+  {
+    index: '02',
+    href: '/research/regions',
+    title: 'Regions',
+    description: 'Nordic, European, Turkish, and South African ports — a comparative study.',
+  },
+  {
+    index: '03',
+    href: '/research/methodology',
+    title: 'Methodology',
+    description: 'The ten-step research design, from philosophy through to framework validation.',
+  },
+  {
+    index: '04',
+    href: '/research/outputs',
+    title: 'Outputs',
+    description: 'Publications, conference papers, policy briefs, and working papers.',
+  },
+  {
+    index: '05',
+    href: '/research/journey',
+    title: 'The Journey',
+    description: 'Milestones, fieldwork, conferences, and publications along the doctoral path.',
+  },
+];
+
+const objectives = [
+  'Analyse current ESG practices in ports and shipping companies across the four focus regions.',
+  'Identify sustainability transparency gaps and inconsistencies in existing ESG standards.',
+  'Develop multidisciplinary KPIs and materiality matrices tailored to ports and shipping.',
+  'Propose reporting mechanisms and explore the potential for a GHG Fund to support a just transition.',
+];
+
+const questions = [
+  'How are ESG practices currently implemented in ports and shipping companies in the focus regions?',
+  'What are the main sustainability transparency gaps across existing ESG standards?',
+  'What multidisciplinary KPIs and materiality matrices are most relevant for ports and shipping?',
+  'What reporting mechanisms and financial instruments, such as a GHG Fund, can best support ESG adoption?',
+];
+
+const scopeIn = [
+  'Ports and shipping companies in the four focus regions',
+  'Existing ESG standards and reporting frameworks',
+  'Multidisciplinary KPIs for maritime sustainability performance',
+  'Materiality matrices for ports and shipping',
+  'Reporting mechanisms suited to the sector',
+  'The potential for a maritime GHG Fund',
+];
+
+const scopeOut = [
+  'Detailed financial modelling of a GHG Fund',
+  'Vessel-level technical audits',
+  'Regions outside the four focus areas',
+  'Full lifecycle assessment of individual cargo types',
+];
+
+const description =
+  'The doctoral research: background, problem, gap, aim, objectives, research questions, scope, and expected contributions of a unified maritime ESG framework.';
+---
+
+<BaseLayout title="Research" description={description}>
+  <PageBanner
+    eyebrow="Doctoral research"
+    title="A Unified ESG Framework for Sustainability Management in Ports and Shipping Companies in Emerging Maritime Regions"
+    subtitle="The study develops a unified ESG framework for ports and shipping companies, analysing current practice, examining available standards and transparency gaps, and addressing the fragmentation of ESG practice across the sector."
+    image="/images/banners/research.jpg"
+    fallback="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=2000&q=80"
+  />
+
+  <section class="section" aria-labelledby="framing-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Framing the study</p>
+        <h2 id="framing-heading">Background, problem, and gap</h2>
+      </div>
+
+      <div class="grid-auto">
+        <article class="card reveal">
+          <h3>Background</h3>
+          <p>
+            Maritime transport sits at the intersection of global trade, environmental impact, and
+            social responsibility. Pressure is arriving from investors, regulators, charterers, and
+            port communities at once. The CSRD, the extension of the EU Emissions Trading System to
+            shipping, FuelEU Maritime, and the Poseidon Principles are together reshaping what
+            operators are expected to measure and disclose.
+          </p>
+        </article>
+
+        <article class="card reveal">
+          <h3>Problem</h3>
+          <p>
+            The sector lacks a coherent, sector-appropriate ESG framework. The standards currently
+            applied were designed for other industries, weight environmental topics narrowly, and
+            leave the socio-economic realities of emerging maritime regions largely unaddressed.
+          </p>
+        </article>
+
+        <article class="card reveal">
+          <h3>Gap</h3>
+          <p>
+            Little existing research develops multidisciplinary KPIs specifically for ports and
+            shipping, builds materiality matrices reflecting the sector's dual footprint at sea and
+            on land, proposes adapted reporting mechanisms, or examines financial instruments such
+            as a GHG Fund.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="aim-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Aim, objectives, and questions</p>
+        <h2 id="aim-heading">What the research sets out to do</h2>
+        <p class="lead">
+          To develop a unified ESG framework for sustainability management in ports and shipping
+          companies in emerging maritime regions.
+        </p>
+      </div>
+
+      <div class="two-col">
+        <div class="card reveal">
+          <h3>Objectives</h3>
+          <ol class="numbered">
+            {objectives.map((item) => <li>{item}</li>)}
+          </ol>
+        </div>
+
+        <div class="card reveal">
+          <h3>Research questions</h3>
+          <ol class="numbered">
+            {questions.map((item) => <li>{item}</li>)}
+          </ol>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="scope-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Boundaries</p>
+        <h2 id="scope-heading">Scope of the study</h2>
+      </div>
+
+      <div class="two-col">
+        <div class="card reveal">
+          <h3>In scope</h3>
+          <ul class="ticks">
+            {scopeIn.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+
+        <div class="card reveal">
+          <h3>Out of scope</h3>
+          <ul class="crosses">
+            {scopeOut.map((item) => <li>{item}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-auto outcome-grid">
+        <article class="card reveal">
+          <h3>Contributions</h3>
+          <p>
+            A unified ESG framework with multidisciplinary KPIs and materiality matrices, an
+            adapted reporting mechanism, and conceptual groundwork for a maritime GHG Fund.
+          </p>
+        </article>
+
+        <article class="card reveal">
+          <h3>Impact</h3>
+          <p>
+            Wider ESG adoption, strengthened governance, improved access to ESG-linked finance, and
+            practical support for a just transition in emerging maritime regions.
+          </p>
+        </article>
+
+        <article class="card reveal">
+          <h3>Limitations</h3>
+          <p>
+            Findings are context-dependent and shaped by the four regions studied. The GHG Fund is
+            developed conceptually and is not implemented or financially modelled.
+          </p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="explore-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow eyebrow--light">Explore</p>
+        <h2 id="explore-heading">Read the research in depth</h2>
+        <p class="lead why-lead">
+          ESG is reshaping maritime, but practice remains fragmented. Each section below takes one
+          part of that picture: what ESG means in this sector, how the four regions compare, how
+          the study is conducted, what it produces, and how the work has progressed.
+        </p>
+      </div>
+
+      <div class="grid-auto">
+        {hubCards.map((card) => <ResearchHubCard {...card} />)}
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .why-lead {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .two-col {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+
+  .outcome-grid {
+    margin-top: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .card h3 {
+    margin-bottom: 0.75rem;
+  }
+
+  .numbered {
+    counter-reset: item;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .numbered li {
+    position: relative;
+    counter-increment: item;
+    padding-left: 2.25rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.9688rem;
+  }
+
+  .numbered li::before {
+    content: counter(item, decimal-leading-zero);
+    position: absolute;
+    left: 0;
+    top: 0.1rem;
+    font-family: var(--font-display);
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: #0b5f57;
+    background: var(--seafoam-100);
+    border-radius: 999px;
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+  }
+
+  .ticks,
+  .crosses {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .ticks li,
+  .crosses li {
+    position: relative;
+    padding-left: 1.75rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.9688rem;
+  }
+
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--gradient-accent);
+  }
+
+  .crosses li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: var(--slate-400);
+  }
+</style>

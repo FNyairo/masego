@@ -1,0 +1,136 @@
+---
+/**
+ * Dialog shell used by the journey marquee.
+ *
+ * Built on the native <dialog> element opened with showModal(), which gives the
+ * focus trap, the Escape handler, inert background content, and focus restoration
+ * for free — then labelled explicitly so the semantics are unambiguous.
+ *
+ * Content is filled in by the opener (see Marquee.astro) rather than duplicated
+ * per card.
+ */
+interface Props {
+  id: string;
+}
+
+const { id } = Astro.props;
+---
+
+<dialog class="modal" id={id} aria-modal="true" aria-labelledby={`${id}-title`}>
+  <div class="modal-panel">
+    <button type="button" class="modal-close" data-modal-close aria-label="Close dialog">
+      <svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true" focusable="false">
+        <path
+          d="M5 5l10 10M15 5L5 15"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"></path>
+      </svg>
+    </button>
+
+    <p class="modal-meta">
+      <span class="modal-date" data-modal-date></span>
+      <span class="badge badge--outline" data-modal-category></span>
+      <span class="badge" data-modal-status></span>
+    </p>
+
+    <h2 class="modal-title" id={`${id}-title`} data-modal-title></h2>
+
+    <img class="modal-image" data-modal-image alt="" hidden />
+
+    <div class="modal-body" data-modal-body></div>
+  </div>
+</dialog>
+
+<style>
+  .modal {
+    /* Tailwind's preflight zeroes margins on every element, which would strip the
+       `margin: auto` a modal <dialog> relies on to centre itself. */
+    margin: auto;
+    width: min(560px, calc(100vw - 2rem));
+    max-height: min(80vh, 720px);
+    padding: 0;
+    border: none;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    overflow: visible;
+  }
+
+  .modal::backdrop {
+    background: rgba(10, 31, 51, 0.55);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+  }
+
+  .modal-panel {
+    position: relative;
+    max-height: min(80vh, 720px);
+    overflow-y: auto;
+    padding: clamp(1.5rem, 4vw, 2rem);
+    border-radius: var(--radius-lg);
+    background: #ffffff;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 0.9rem;
+    right: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 999px;
+    border: 1px solid var(--slate-100);
+    background: #ffffff;
+    color: var(--navy-800);
+    cursor: pointer;
+    transition: border-color 0.18s ease, color 0.18s ease;
+  }
+
+  .modal-close:hover {
+    border-color: var(--teal-400);
+    color: var(--teal-700);
+  }
+
+  .modal-meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.6rem;
+    margin: 0 3rem 0.9rem 0;
+  }
+
+  .modal-date {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+
+  .modal-title {
+    font-size: clamp(1.25rem, 2.4vw, 1.625rem);
+    margin-bottom: 0.9rem;
+  }
+
+  .modal-image {
+    width: 100%;
+    border-radius: var(--radius-sm);
+    margin-bottom: 1rem;
+  }
+
+  .modal-body {
+    font-size: 0.9688rem;
+    color: var(--slate-600);
+  }
+
+  .modal-body :global(p) {
+    margin-bottom: 0.9rem;
+  }
+
+  .modal-body :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

@@ -1,0 +1,367 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import { getCollection } from 'astro:content';
+
+const regions = (await getCollection('regions')).sort((a, b) => a.data.order - b.data.order);
+
+const markers = regions.flatMap((region) =>
+  region.data.ports.map((port) => ({
+    name: port.name,
+    country: port.country,
+    region: region.data.name,
+    lat: port.lat,
+    lng: port.lng,
+  }))
+);
+
+const description =
+  'A comparative study of ESG practice across Nordic, European, Turkish, and South African ports, with an interactive map of the twenty ports profiled.';
+---
+
+<BaseLayout title="Regions" description={description}>
+  <PageBanner
+    eyebrow="Comparative study"
+    title="Four maritime regions, four ESG realities"
+    subtitle="The research compares ports and shipping companies across the Nordic region, the European Union, Turkey, and South Africa — a span that runs from mature disclosure practice to contexts where the social dimension of ESG carries the greatest weight."
+    image="/images/banners/regions.jpg"
+    fallback="https://images.unsplash.com/photo-1509356843151-3e7d96241e11?w=1600&q=80"
+  />
+
+  <section class="section section--tight" aria-labelledby="map-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Ports profiled</p>
+        <h2 id="map-heading">Twenty ports across the four focus regions</h2>
+        <p class="lead">
+          Five ports in each region, selected for throughput, cargo profile, and the range of ESG
+          practice they represent. Use the map to locate each port, or read the regional profiles
+          below.
+        </p>
+      </div>
+
+      <div class="map-shell reveal">
+        <div id="regions-map" role="application" aria-label="Interactive map of the twenty ports profiled in the research"></div>
+      </div>
+      <p class="map-note">
+        Map data &copy; OpenStreetMap contributors. A full list of ports is given in each regional
+        profile below.
+      </p>
+    </div>
+  </section>
+
+  {
+    regions.map((region, index) => (
+      <section
+        class:list={['section', 'region-section', { 'section--soft': index % 2 === 1 }]}
+        id={region.data.slug}
+        aria-labelledby={`${region.data.slug}-heading`}
+      >
+        <div class="container">
+          <div class="region-head reveal">
+            <span class="badge">{region.data.tag}</span>
+            <h2 id={`${region.data.slug}-heading`}>{region.data.name}</h2>
+            <p class="lead">{region.data.summary}</p>
+          </div>
+
+          <div class="region-grid">
+            <div class="region-main reveal">
+              <div class="card">
+                <h3>Maritime context</h3>
+                <p>{region.data.maritimeContext}</p>
+              </div>
+
+              <div class="region-lists">
+                <div class="card">
+                  <h3>ESG challenges</h3>
+                  <ul class="dot-list dot-list--coral">
+                    {region.data.esgChallenges.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+                <div class="card">
+                  <h3>ESG opportunities</h3>
+                  <ul class="dot-list">
+                    {region.data.esgOpportunities.map((item) => (
+                      <li>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <div class="region-aside reveal">
+              <div class="card">
+                <h3>Countries</h3>
+                <ul class="pill-list">
+                  {region.data.countries.map((country) => (
+                    <li>{country}</li>
+                  ))}
+                </ul>
+
+                <h3 class="ports-heading">Ports</h3>
+                <ul class="port-list">
+                  {region.data.ports.map((port) => (
+                    <li>
+                      <span class="port-name">{port.name}</span>
+                      <span class="port-country">{port.country}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    ))
+  }
+
+  <script type="application/json" id="port-data" set:html={JSON.stringify(markers)} is:inline />
+</BaseLayout>
+
+<script>
+  import L from 'leaflet';
+  import 'leaflet/dist/leaflet.css';
+
+  const el = document.getElementById('regions-map');
+  const dataEl = document.getElementById('port-data');
+
+  if (el && dataEl && dataEl.textContent) {
+    const ports = JSON.parse(dataEl.textContent);
+
+    const map = L.map(el, {
+      center: [35, 10],
+      zoom: 3,
+      scrollWheelZoom: false,
+    });
+
+    // OpenStreetMap standard tiles: free and keyless. A light CSS filter (see
+    // .leaflet-tile below) mutes them to match the site palette.
+    //
+    // CARTO's Positron basemap now stamps "API KEY REQUIRED" over keyless
+    // requests. To use it instead, obtain a CARTO API key and swap in:
+    //   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png?api_key=YOUR_KEY', {
+    //     attribution: '&copy; OpenStreetMap &copy; CARTO', maxZoom: 18,
+    //   }).addTo(map);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 19,
+    }).addTo(map);
+
+    const icon = L.divIcon({
+      className: 'port-marker',
+      html: '<span class="port-marker-dot"></span>',
+      iconSize: [14, 14],
+      iconAnchor: [7, 7],
+      popupAnchor: [0, -10],
+    });
+
+    const markers = ports.map((port) =>
+      L.marker([port.lat, port.lng], { icon, title: port.name })
+        .addTo(map)
+        .bindPopup(
+          `<strong>${port.name}</strong><br><span class="popup-meta">${port.country}</span><br><span class="popup-region">${port.region}</span>`
+        )
+    );
+
+    // The default view above is centred on Europe; fit the view to every port so
+    // the South African ports are visible on load rather than only after panning.
+    if (markers.length) {
+      map.fitBounds(L.featureGroup(markers).getBounds(), {
+        padding: [44, 44],
+        maxZoom: 4,
+      });
+    }
+  }
+</script>
+
+<style is:global>
+  .port-marker {
+    background: transparent;
+    border: none;
+  }
+
+  .port-marker-dot {
+    display: block;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: #0d9488;
+    border: 2px solid #ffffff;
+    box-shadow: 0 0 0 4px rgba(45, 212, 191, 0.35), 0 2px 6px rgba(10, 31, 51, 0.35);
+  }
+
+  .leaflet-popup-content {
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    color: #0f2e4a;
+  }
+
+  .leaflet-popup-content .popup-meta {
+    color: #475569;
+  }
+
+  .leaflet-popup-content .popup-region {
+    color: #0f766e;
+    font-weight: 600;
+  }
+
+  .leaflet-container {
+    font-family: var(--font-sans);
+    background: #eef3f7;
+  }
+
+  /* Mutes the basemap so the teal port markers stay the focal point. */
+  .leaflet-tile {
+    filter: grayscale(0.55) saturate(0.75) brightness(1.04) contrast(0.96);
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .leaflet-tile {
+      transition: filter 0.2s ease;
+    }
+  }
+</style>
+
+<style>
+  .section-head,
+  .region-head {
+    max-width: 64ch;
+    margin-bottom: clamp(1.75rem, 3.5vw, 2.5rem);
+  }
+
+  .region-head .badge {
+    margin-bottom: 0.9rem;
+  }
+
+  .map-shell {
+    border-radius: var(--radius-xl);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    border: 1px solid var(--slate-100);
+    background: #eef3f7;
+  }
+
+  #regions-map {
+    height: clamp(340px, 52vh, 520px);
+    width: 100%;
+  }
+
+  .map-note {
+    font-size: 0.8125rem;
+    color: var(--slate-500);
+    margin-top: 0.85rem;
+  }
+
+  .region-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    align-items: start;
+  }
+
+  .region-main {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .region-lists {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .card h3 {
+    margin-bottom: 0.7rem;
+  }
+
+  .dot-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dot-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: 0.65rem;
+    font-size: 0.9375rem;
+  }
+
+  .dot-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--teal-600);
+  }
+
+  .dot-list--coral li::before {
+    background: var(--coral-500);
+  }
+
+  .pill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    list-style: none;
+    margin: 0 0 1.5rem;
+    padding: 0;
+  }
+
+  .pill-list li {
+    margin: 0;
+    padding: 0.3rem 0.75rem;
+    border-radius: var(--radius-pill);
+    background: var(--seafoam-100);
+    color: #0b5f57;
+    font-size: 0.8125rem;
+    font-weight: 500;
+  }
+
+  .ports-heading {
+    margin-top: 0;
+  }
+
+  .port-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .port-list li {
+    display: flex;
+    flex-direction: column;
+    padding: 0.6rem 0;
+    border-bottom: 1px solid var(--slate-100);
+    margin: 0;
+  }
+
+  .port-list li:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .port-name {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--navy-800);
+  }
+
+  .port-country {
+    font-size: 0.8125rem;
+    color: var(--slate-500);
+  }
+
+  @media (max-width: 900px) {
+    .region-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

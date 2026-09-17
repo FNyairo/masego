@@ -1,0 +1,333 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+import SocialLinks from '../components/SocialLinks.astro';
+
+const focusOptions = [
+  'Port authority or terminal operator',
+  'Shipping company or ship manager',
+  'Regulator or policy body',
+  'Finance, insurance, or investment',
+  'Academic research collaboration',
+  'Conference, speaking, or teaching',
+  'Media enquiry',
+  'Other',
+];
+
+const description =
+  'Contact Masego Mosupye to discuss ESG research collaboration, data sharing, validation workshops, or speaking on sustainability in ports and shipping.';
+---
+
+<BaseLayout title="Contact & Collaboration" description={description}>
+  <PageBanner
+    eyebrow="Contact"
+    title="Collaboration and enquiries"
+    subtitle="The research is strengthened by contact with the organisations it studies. Enquiries are welcome from ports, shipping companies, regulators, finance providers, and fellow researchers."
+    image="/images/banners/contact.jpg"
+    fallback="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="contact-heading">
+    <div class="container contact-grid">
+      <div class="contact-intro reveal">
+        <p class="eyebrow">Get in touch</p>
+        <h2 id="contact-heading">Start a conversation</h2>
+        <p>
+          Masego Mosupye welcomes enquiries about the research, requests to share ESG reporting
+          practice, invitations to take part in interviews or validation workshops, and
+          opportunities to present the work.
+        </p>
+
+        <dl class="contact-details">
+          <div>
+            <dt>Email</dt>
+            <dd><a href="mailto:masegomosupye@gmail.com">masegomosupye@gmail.com</a></dd>
+          </div>
+          <div>
+            <dt>LinkedIn</dt>
+            <dd>
+              <a href="https://www.linkedin.com/in/masegomosupye/" target="_blank" rel="noopener noreferrer">
+                linkedin.com/in/masegomosupye
+              </a>
+            </dd>
+          </div>
+          <div>
+            <dt>Institution</dt>
+            <dd>World Maritime University, Malmö, Sweden</dd>
+          </div>
+        </dl>
+
+        <div class="profile-social">
+          <h3 class="social-label">Elsewhere</h3>
+          <SocialLinks variant="row" />
+        </div>
+
+        <div class="collab-panel">
+          <h3>Particularly welcome</h3>
+          <ul class="dot-list">
+            <li>Ports and operators willing to share ESG reporting practice</li>
+            <li>Participants for interviews, focus groups, and Delphi validation rounds</li>
+            <li>Researchers working on comparative sustainability frameworks</li>
+            <li>Finance providers working on ESG-linked maritime lending</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="contact-form-wrap reveal">
+        <p class="form-success" id="formSuccess" role="status" hidden>
+          Thank you — your message has been sent. Masego will reply to the email address you
+          provided.
+        </p>
+
+        <form
+          class="contact-form card"
+          name="contact"
+          method="POST"
+          action="/contact?submitted=true"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <p class="hidden-field">
+            <label>
+              Do not fill this in if you are human
+              <input name="bot-field" tabindex="-1" autocomplete="off" />
+            </label>
+          </p>
+
+          <h2 class="form-heading">Send a message</h2>
+          <p class="form-note">Fields marked with an asterisk (*) are required.</p>
+
+          <div class="field">
+            <label for="name">Name <span aria-hidden="true">*</span></label>
+            <input type="text" id="name" name="name" autocomplete="name" required />
+          </div>
+
+          <div class="field">
+            <label for="organisation">Organisation</label>
+            <input type="text" id="organisation" name="organisation" autocomplete="organization" />
+          </div>
+
+          <div class="field">
+            <label for="email">Email <span aria-hidden="true">*</span></label>
+            <input type="email" id="email" name="email" autocomplete="email" required />
+          </div>
+
+          <div class="field">
+            <label for="research-focus">Research focus</label>
+            <select id="research-focus" name="research-focus">
+              <option value="">Please select…</option>
+              {focusOptions.map((option) => <option value={option}>{option}</option>)}
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="message">Message <span aria-hidden="true">*</span></label>
+            <textarea id="message" name="message" rows="6" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn--primary form-submit">Send message</button>
+
+          <p class="form-privacy">
+            Messages are delivered by Netlify Forms to masegomosupye@gmail.com and are used only to
+            respond to your enquiry.
+          </p>
+        </form>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<script is:inline>
+  (function () {
+    if (new URLSearchParams(window.location.search).get('submitted') !== 'true') return;
+    const banner = document.getElementById('formSuccess');
+    if (!banner) return;
+    banner.hidden = false;
+    banner.setAttribute('tabindex', '-1');
+    banner.focus();
+  })();
+</script>
+
+<style>
+  .form-success {
+    background: var(--seafoam-100);
+    border: 1px solid rgba(13, 148, 136, 0.35);
+    border-radius: var(--radius-sm);
+    color: #0b5f57;
+    font-weight: 500;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .contact-grid {
+    display: grid;
+    gap: clamp(2rem, 4vw, 3rem);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: start;
+  }
+
+  .contact-intro {
+    max-width: 56ch;
+  }
+
+  .contact-details {
+    display: grid;
+    gap: 1rem;
+    margin: 1.75rem 0;
+  }
+
+  .contact-details dt {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin-bottom: 0.2rem;
+  }
+
+  .contact-details dd {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--navy-800);
+  }
+
+  .profile-social {
+    margin-bottom: 1.75rem;
+  }
+
+  .social-label {
+    font-family: var(--font-sans);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    margin-bottom: 0.75rem;
+  }
+
+  .collab-panel {
+    background: var(--seafoam-100);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  }
+
+  .collab-panel h3 {
+    font-size: 1.0625rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .dot-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .dot-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: 0.55rem;
+    font-size: 0.9375rem;
+    color: #0b5f57;
+  }
+
+  .dot-list li:last-child {
+    margin-bottom: 0;
+  }
+
+  .dot-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 9px;
+    height: 9px;
+    border-radius: 999px;
+    background: var(--teal-600);
+  }
+
+  .contact-form {
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .form-heading {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    margin-bottom: 0.35rem;
+  }
+
+  .form-note {
+    font-size: 0.8125rem;
+    color: var(--slate-500);
+    margin-bottom: 1.5rem;
+  }
+
+  .field {
+    margin-bottom: 1.15rem;
+  }
+
+  .field label {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--navy-800);
+    margin-bottom: 0.4rem;
+  }
+
+  .field label span {
+    color: var(--coral-500);
+  }
+
+  .field input,
+  .field select,
+  .field textarea {
+    width: 100%;
+    padding: 0.7rem 0.85rem;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--slate-100);
+    background: #ffffff;
+    font-family: inherit;
+    font-size: 0.9375rem;
+    color: var(--navy-900);
+    transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  }
+
+  .field textarea {
+    resize: vertical;
+    min-height: 140px;
+  }
+
+  .field input:hover,
+  .field select:hover,
+  .field textarea:hover {
+    border-color: var(--slate-400);
+  }
+
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    border-color: var(--teal-400);
+    box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.2);
+  }
+
+  .form-submit {
+    width: 100%;
+    margin-top: 0.35rem;
+  }
+
+  .form-privacy {
+    font-size: 0.8125rem;
+    color: var(--slate-500);
+    margin-top: 1rem;
+    margin-bottom: 0;
+  }
+
+  .hidden-field {
+    display: none;
+  }
+
+  @media (max-width: 880px) {
+    .contact-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

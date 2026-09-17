@@ -1,0 +1,312 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+
+const steps = [
+  {
+    title: 'Research Philosophy',
+    detail:
+      'Pragmatic, interdisciplinary approach bridging maritime governance, sustainability measurement, and social science.',
+  },
+  {
+    title: 'Research Approach',
+    detail:
+      'Mixed-methods: qualitative stakeholder engagement combined with quantitative indicator development.',
+  },
+  {
+    title: 'Research Design',
+    detail: 'Comparative multiple-case-study design across four regional contexts.',
+  },
+  {
+    title: 'Systematic Literature Review',
+    detail:
+      'Structured review of ESG standards, maritime sustainability literature, and reporting frameworks.',
+  },
+  {
+    title: 'Case-Study Approach',
+    detail: 'In-depth study of selected ports and shipping companies in each region.',
+  },
+  {
+    title: 'Stakeholder Engagement',
+    detail: 'Semi-structured interviews, focus groups, and expert workshops.',
+  },
+  {
+    title: 'Data Collection',
+    detail: 'Document analysis, interviews, surveys, and public disclosures.',
+  },
+  {
+    title: 'Data Analysis',
+    detail: 'Thematic and content analysis, with comparative matrix development.',
+  },
+  {
+    title: 'Framework Development',
+    detail: 'Iterative design of KPIs, materiality matrices, and reporting mechanisms.',
+  },
+  {
+    title: 'Framework Validation',
+    detail: 'Delphi rounds and expert validation workshops.',
+  },
+];
+
+const step = (index: number) => ({ ...steps[index], number: String(index + 1).padStart(2, '0') });
+
+const description =
+  'The ten-step research design behind the unified maritime ESG framework, from a pragmatic research philosophy through to Delphi validation with sector experts.';
+---
+
+<BaseLayout title="Methodology" description={description}>
+  <PageBanner
+    eyebrow="Methodology"
+    title="How the research is conducted"
+    subtitle="A mixed-methods, comparative multiple-case-study design, sequenced in ten steps from research philosophy through to validation of the framework with practitioners and sector experts."
+    image="/images/banners/methodology.jpg"
+    fallback="https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="steps-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Research design</p>
+        <h2 id="steps-heading">Ten steps, from philosophy to validation</h2>
+      </div>
+
+      <div class="method-grid">
+        {/* Row 1: intro panel (9 cols) + step 1 (3 cols) */}
+        <div class="method-panel reveal">
+          <p>
+            A rigorous, mixed-methods approach grounded in comparative case-study design and
+            stakeholder engagement. Each phase builds on the last — from literature to fieldwork,
+            from analysis to a validated framework.
+          </p>
+        </div>
+
+        <article class="method-card reveal">
+          <span class="method-number" aria-hidden="true">{step(0).number}</span>
+          <h3>{step(0).title}</h3>
+          <p>{step(0).detail}</p>
+        </article>
+
+        {/* Row 2: steps 2–5 */}
+        {
+          [1, 2, 3, 4].map((i) => (
+            <article class="method-card reveal">
+              <span class="method-number" aria-hidden="true">
+                {step(i).number}
+              </span>
+              <h3>{step(i).title}</h3>
+              <p>{step(i).detail}</p>
+            </article>
+          ))
+        }
+
+        {/* Row 3: steps 6–9 */}
+        {
+          [5, 6, 7, 8].map((i) => (
+            <article class="method-card reveal">
+              <span class="method-number" aria-hidden="true">
+                {step(i).number}
+              </span>
+              <h3>{step(i).title}</h3>
+              <p>{step(i).detail}</p>
+            </article>
+          ))
+        }
+
+        {/* Row 4: step 10 (3 cols) + closing panel (9 cols) */}
+        <article class="method-card reveal">
+          <span class="method-number" aria-hidden="true">{step(9).number}</span>
+          <h3>{step(9).title}</h3>
+          <p>{step(9).detail}</p>
+        </article>
+
+        <div class="method-panel method-panel--closing reveal">
+          <p>
+            The methodology combines academic rigour with practitioner relevance, ensuring the
+            unified ESG framework is both theoretically grounded and practically usable across
+            ports and shipping companies in the four focus regions.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="rigour-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow eyebrow--light">Quality and ethics</p>
+        <h2 id="rigour-heading">Rigour, ethics, and limitations</h2>
+      </div>
+
+      <div class="rigour-grid reveal">
+        <article class="rigour-card">
+          <h3>Triangulation</h3>
+          <p>
+            Document evidence, interview accounts, and reported indicators are compared against one
+            another, so that claims made in sustainability reports are not taken at face value.
+          </p>
+        </article>
+        <article class="rigour-card">
+          <h3>Research ethics</h3>
+          <p>
+            Participation is voluntary and informed. Commercially sensitive material is treated
+            confidentially, and findings are reported at a level that does not expose individual
+            respondents.
+          </p>
+        </article>
+        <article class="rigour-card">
+          <h3>Known limitations</h3>
+          <p>
+            Findings are context-dependent and shaped by the four regions studied. The GHG Fund is
+            developed conceptually rather than implemented or financially modelled.
+          </p>
+        </article>
+      </div>
+
+      <div class="next-actions reveal">
+        <a class="btn btn--primary" href="/research/outputs">See research outputs</a>
+        <a class="btn btn--ghost" href="/research/journey">Follow the journey</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  /* Asymmetric 12-column layout:
+     row 1  intro (9) + step 1 (3)
+     row 2  steps 2–5   (3 each)
+     row 3  steps 6–9   (3 each)
+     row 4  step 10 (3) + closing (9) */
+  .method-grid {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: clamp(1rem, 2vw, 1.5rem);
+    align-items: stretch;
+  }
+
+  .method-panel {
+    grid-column: span 9;
+    display: flex;
+    align-items: center;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    border-radius: var(--radius-lg);
+    border-left: 4px solid var(--teal-600);
+    background: var(--seafoam-100);
+  }
+
+  .method-panel--closing {
+    background: #f6f3ea;
+    border-left-color: var(--coral-500);
+  }
+
+  .method-panel p {
+    margin: 0;
+    font-size: clamp(1rem, 1.5vw, 1.125rem);
+    line-height: 1.7;
+    color: #0b3b33;
+  }
+
+  .method-panel--closing p {
+    color: var(--slate-600);
+  }
+
+  .method-card {
+    grid-column: span 3;
+    display: flex;
+    flex-direction: column;
+    padding: clamp(1.25rem, 2.2vw, 1.6rem);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-100);
+    background: #ffffff;
+    box-shadow: var(--shadow-xs);
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+
+  .method-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(45, 212, 191, 0.5);
+  }
+
+  .method-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: var(--radius-sm);
+    background: var(--seafoam-100);
+    color: #0b5f57;
+    font-family: var(--font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    margin-bottom: 0.9rem;
+  }
+
+  .method-card h3 {
+    font-size: 1.0625rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .method-card p {
+    font-size: 0.9062rem;
+    margin: 0;
+    color: var(--slate-600);
+  }
+
+  /* Two per row on tablets, then a single column in source order on phones. */
+  @media (max-width: 1080px) {
+    .method-card {
+      grid-column: span 6;
+    }
+
+    .method-panel {
+      grid-column: span 12;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .method-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .method-card,
+    .method-panel {
+      grid-column: auto;
+    }
+  }
+
+  .rigour-grid {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .rigour-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: var(--radius-lg);
+    padding: clamp(1.4rem, 3vw, 1.9rem);
+  }
+
+  .rigour-card h3 {
+    margin-bottom: 0.6rem;
+  }
+
+  .rigour-card p {
+    font-size: 0.9375rem;
+    color: rgba(255, 255, 255, 0.78);
+    margin: 0;
+  }
+
+  .next-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+</style>

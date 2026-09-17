@@ -1,0 +1,151 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import Marquee from '../../components/Marquee.astro';
+import { getCollection } from 'astro:content';
+
+const entries = (await getCollection('timeline')).sort((a, b) => a.data.order - b.data.order);
+
+const categoryLabels: Record<string, string> = {
+  milestone: 'Milestone',
+  course: 'Course',
+  visit: 'Research visit',
+  conference: 'Conference',
+  publication: 'Publication',
+  engagement: 'Engagement',
+};
+
+const items = entries.map((entry) => ({
+  id: entry.id,
+  date: entry.data.date,
+  category: categoryLabels[entry.data.category] ?? entry.data.category,
+  status: entry.data.status,
+  title: entry.data.title,
+  description: entry.data.description,
+  // The Markdown body becomes the second paragraph inside the dialog.
+  details: (entry.body ?? '').replace(/\s+/g, ' ').trim(),
+  // Optional photograph: drop a file in public/images/journey/ and set the path here.
+  image: undefined as string | undefined,
+}));
+
+const counts = {
+  completed: entries.filter((e) => e.data.status === 'completed').length,
+  inProgress: entries.filter((e) => e.data.status === 'in-progress').length,
+  planned: entries.filter((e) => e.data.status === 'planned').length,
+};
+
+const description =
+  'Milestones, fieldwork, conferences, and publications along the doctoral path: a timeline of the maritime ESG framework research through to thesis submission.';
+---
+
+<BaseLayout title="The Journey" description={description}>
+  <PageBanner
+    eyebrow="The Journey"
+    title="Milestones along the doctoral path"
+    subtitle="How the research has progressed: literature review and proposal defence, fieldwork across the four regions, iterative framework development, and dissemination."
+    image="/images/banners/journey.jpg"
+    fallback="https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="timeline-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Timeline</p>
+        <h2 id="timeline-heading">From review to submission</h2>
+        <p class="lead">
+          The cards below drift through the research in order. Select one to read the full entry;
+          the drift pauses while the panel is open.
+        </p>
+
+        <ul class="status-key">
+          <li><span class="key-dot key-dot--completed" aria-hidden="true"></span>{counts.completed} completed</li>
+          <li><span class="key-dot key-dot--progress" aria-hidden="true"></span>{counts.inProgress} in progress</li>
+          <li><span class="key-dot key-dot--planned" aria-hidden="true"></span>{counts.planned} planned</li>
+        </ul>
+      </div>
+    </div>
+
+    <Marquee items={items} />
+  </section>
+
+  <section class="section section--soft" aria-labelledby="follow-heading">
+    <div class="container container--narrow reveal">
+      <p class="eyebrow">Stay in touch</p>
+      <h2 id="follow-heading">Follow the research as it develops</h2>
+      <p class="lead">
+        Updates on fieldwork, framework development, and publication are shared on LinkedIn, and
+        collaboration enquiries are always welcome.
+      </p>
+      <div class="follow-actions">
+        <a class="btn btn--primary" href="/contact">Contact Masego</a>
+        <a class="btn btn--outline" href="https://www.linkedin.com/in/masegomosupye/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(1.5rem, 3vw, 2rem);
+  }
+
+  .status-key {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    font-size: 0.875rem;
+    color: var(--slate-600);
+  }
+
+  .status-key li {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+  }
+
+  .key-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    flex: none;
+  }
+
+  .key-dot--completed {
+    background: var(--teal-600);
+  }
+
+  .key-dot--progress {
+    background: var(--coral-500);
+  }
+
+  .key-dot--planned {
+    background: transparent;
+    border: 2px solid var(--slate-400);
+  }
+
+  .follow-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  /* The marquee needs the full viewport width to drift across. */
+  .section :global(.marquee) {
+    margin-inline: calc(50% - 50vw);
+    width: 100vw;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .section :global(.marquee) {
+      margin-inline: auto;
+      width: min(100%, var(--container-width));
+      padding-inline: var(--container-pad);
+    }
+  }
+</style>

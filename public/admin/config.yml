@@ -1,0 +1,180 @@
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: public/uploads
+public_folder: /uploads
+
+site_url: https://masegomosupye.com
+display_url: https://masegomosupye.com
+logo_url: https://masegomosupye.com/favicon.svg
+
+publish_mode: simple
+
+collections:
+  # ---------------------------------------------------------------- publications
+  - name: publications
+    label: Publications
+    label_singular: Publication
+    folder: src/content/publications
+    create: true
+    slug: '{{year}}-{{slug}}'
+    extension: md
+    format: frontmatter
+    summary: '{{year}} — {{title}}'
+    sortable_fields: [year, title]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Authors, name: authors, widget: list, field: { label: Author, name: author, widget: string }, default: ['Masego Mosupye'] }
+      - { label: Year, name: year, widget: number, value_type: int, min: 1990, max: 2100 }
+      - label: Type
+        name: type
+        widget: select
+        options:
+          - { label: Journal article, value: journal }
+          - { label: Conference paper, value: conference }
+          - { label: Policy brief, value: policy-brief }
+          - { label: Working paper, value: working-paper }
+          - { label: Report, value: report }
+          - { label: Poster, value: poster }
+        default: journal
+      - { label: Journal, name: journal, widget: string, required: false }
+      - { label: Conference, name: conference, widget: string, required: false }
+      - { label: DOI, name: doi, widget: string, required: false, hint: 'For example 10.1000/xyz123' }
+      - { label: URL, name: url, widget: string, required: false }
+      - { label: Abstract, name: abstract, widget: text, required: false }
+      - label: Status
+        name: status
+        widget: select
+        options:
+          - { label: Published, value: published }
+          - { label: Forthcoming, value: forthcoming }
+          - { label: Under review, value: under-review }
+        default: published
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # -------------------------------------------------------------------- regions
+  - name: regions
+    label: Regions
+    label_singular: Region
+    folder: src/content/regions
+    create: true
+    slug: '{{fields.slug}}'
+    extension: md
+    format: frontmatter
+    summary: '{{order}} — {{name}}'
+    sortable_fields: [order, name]
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Slug, name: slug, widget: string, hint: 'Used for the anchor link, for example nordic' }
+      - { label: Tag, name: tag, widget: string, hint: 'Short label such as Benchmark or Emerging' }
+      - { label: Image, name: image, widget: string, required: false, hint: 'Image URL, or upload to /uploads and use that path' }
+      - { label: Summary, name: summary, widget: text }
+      - { label: Countries, name: countries, widget: list, field: { label: Country, name: country, widget: string } }
+      - label: Ports
+        name: ports
+        widget: list
+        summary: '{{fields.name}} ({{fields.country}})'
+        fields:
+          - { label: Port name, name: name, widget: string }
+          - { label: Country, name: country, widget: string }
+          - { label: Latitude, name: lat, widget: number, value_type: float, min: -90, max: 90 }
+          - { label: Longitude, name: lng, widget: number, value_type: float, min: -180, max: 180 }
+      - { label: Maritime context, name: maritimeContext, widget: text }
+      - { label: ESG challenges, name: esgChallenges, widget: list, field: { label: Challenge, name: challenge, widget: string } }
+      - { label: ESG opportunities, name: esgOpportunities, widget: list, field: { label: Opportunity, name: opportunity, widget: string } }
+      - { label: Order, name: order, widget: number, value_type: int, default: 1 }
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ------------------------------------------------------------------- timeline
+  - name: timeline
+    label: Timeline
+    label_singular: Timeline entry
+    folder: src/content/timeline
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    summary: '{{order}} — {{date}} — {{title}}'
+    sortable_fields: [order, title]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - { label: Date, name: date, widget: string, hint: 'Free text, for example 2024 or 2024–2025' }
+      - label: Category
+        name: category
+        widget: select
+        options:
+          - { label: Milestone, value: milestone }
+          - { label: Course, value: course }
+          - { label: Research visit, value: visit }
+          - { label: Conference, value: conference }
+          - { label: Publication, value: publication }
+          - { label: Engagement, value: engagement }
+        default: milestone
+      - label: Status
+        name: status
+        widget: select
+        options:
+          - { label: Completed, value: completed }
+          - { label: In progress, value: in-progress }
+          - { label: Planned, value: planned }
+        default: planned
+      - { label: Description, name: description, widget: text }
+      - { label: Order, name: order, widget: number, value_type: int, default: 1 }
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ----------------------------------------------------------------- frameworks
+  - name: frameworks
+    label: ESG Frameworks
+    label_singular: Framework
+    folder: src/content/frameworks
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    summary: '{{order}} — {{abbreviation}} — {{name}}'
+    sortable_fields: [order, name]
+    fields:
+      - { label: Name, name: name, widget: string }
+      - { label: Abbreviation, name: abbreviation, widget: string }
+      - { label: Full name, name: fullName, widget: string }
+      - { label: Description, name: description, widget: text }
+      - label: Scope
+        name: scope
+        widget: select
+        options:
+          - { label: Global, value: global }
+          - { label: Maritime, value: maritime }
+          - { label: Regional, value: regional }
+          - { label: Sectoral, value: sectoral }
+        default: global
+      - { label: URL, name: url, widget: string, required: false }
+      - { label: Relevance to the research, name: relevance, widget: text }
+      - { label: Order, name: order, widget: number, value_type: int, default: 1 }
+      - { label: Body, name: body, widget: markdown, required: false }
+
+  # ------------------------------------------------------------------ resources
+  - name: resources
+    label: Knowledge Hub Resources
+    label_singular: Resource
+    folder: src/content/resources
+    create: true
+    slug: '{{slug}}'
+    extension: md
+    format: frontmatter
+    summary: '{{category}} — {{title}}'
+    sortable_fields: [title, category]
+    fields:
+      - { label: Title, name: title, widget: string }
+      - label: Category
+        name: category
+        widget: select
+        options: [Standard, Report, Tool, Dataset, Reading]
+        default: Standard
+      - { label: Source, name: source, widget: string }
+      - { label: URL, name: url, widget: string }
+      - { label: Description, name: description, widget: text }
+      - { label: Tags, name: tags, widget: list, required: false, field: { label: Tag, name: tag, widget: string } }
+      - { label: Featured, name: featured, widget: boolean, default: false, required: false }
+      - { label: Body, name: body, widget: markdown, required: false }

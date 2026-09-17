@@ -1,0 +1,457 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import PageBanner from '../components/PageBanner.astro';
+import { getCollection } from 'astro:content';
+
+const regions = (await getCollection('regions')).sort((a, b) => a.data.order - b.data.order);
+const frameworks = await getCollection('frameworks');
+
+const portCount = regions.reduce((total, region) => total + region.data.ports.length, 0);
+
+const kpis = [
+  { value: String(regions.length), label: 'Focus Regions', detail: 'Nordic, EU, Turkey, South Africa' },
+  { value: String(portCount), label: 'Ports Profiled', detail: 'Five ports in each focus region' },
+  { value: String(frameworks.length), label: 'ESG Frameworks Mapped', detail: 'Global, maritime, sectoral, regional' },
+  { value: '4', label: 'Research Objectives', detail: 'Practice, gaps, KPIs, reporting' },
+];
+
+const adoption = [
+  { region: 'Nordic', value: 85 },
+  { region: 'European Ports (EU)', value: 78 },
+  { region: 'Turkey', value: 52 },
+  { region: 'South Africa', value: 45 },
+];
+
+const pillarScores = [
+  { region: 'Nordic', e: 88, s: 82, g: 85 },
+  { region: 'European Ports (EU)', e: 82, s: 72, g: 80 },
+  { region: 'Turkey', e: 54, s: 48, g: 54 },
+  { region: 'South Africa', e: 42, s: 52, g: 41 },
+];
+
+const materiality = [
+  { topic: 'GHG emissions and energy transition', impact: 'High', financial: 'High' },
+  { topic: 'Air quality in port communities', impact: 'High', financial: 'Medium' },
+  { topic: 'Seafarer and port worker welfare', impact: 'High', financial: 'Medium' },
+  { topic: 'Governance and disclosure assurance', impact: 'Medium', financial: 'High' },
+  { topic: 'Skills and just transition readiness', impact: 'High', financial: 'Medium' },
+  { topic: 'Waste, water, and biodiversity', impact: 'Medium', financial: 'Low' },
+];
+
+const description =
+  'An illustrative ESG dashboard: regional adoption scores, pillar comparisons, and a draft materiality view, shown while the framework is under development.';
+---
+
+<BaseLayout title="ESG Dashboard" description={description}>
+  <PageBanner
+    eyebrow="ESG Dashboard"
+    title="Indicators, materiality, and regional comparison"
+    subtitle="A working view of the data structures behind the research. Every figure on this page is illustrative and is shown to demonstrate the intended explorer, not to report findings."
+    image="/images/banners/dashboard.jpg"
+    fallback="https://images.unsplash.com/photo-1516216628859-9bccecab13ca?w=1600&q=80"
+  >
+    <p class="hero-status" role="status">
+      <span class="pulse-dot"></span>
+      <span>Illustrative content — the framework and its indicators are under development</span>
+    </p>
+  </PageBanner>
+
+  <section class="section section--tight" aria-labelledby="kpi-heading">
+    <div class="container">
+      <h2 class="sr-only" id="kpi-heading">Headline figures</h2>
+      <ul class="kpi-grid reveal">
+        {
+          kpis.map((kpi) => (
+            <li class="kpi-card card">
+              <span class="kpi-value">{kpi.value}</span>
+              <span class="kpi-label">{kpi.label}</span>
+              <span class="kpi-detail">{kpi.detail}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="adoption-heading">
+    <div class="container">
+      <div class="dash-grid">
+        <figure class="chart-card card reveal">
+          <figcaption class="chart-head">
+            <div>
+              <h2 class="chart-title" id="adoption-heading">Regional ESG adoption scores</h2>
+              <p class="chart-sub">Composite score across disclosure, environmental action, and governance (0–100)</p>
+            </div>
+            <span class="badge badge--coral"><span class="pulse-dot"></span>Illustrative</span>
+          </figcaption>
+
+          <ul class="bar-chart">
+            {
+              adoption.map((row) => (
+                <li class="bar-row">
+                  <span class="bar-label">{row.region}</span>
+                  <span class="bar-track">
+                    <span class="bar-fill" style={`--bar-width:${row.value}%`} />
+                  </span>
+                  <span class="bar-value">{row.value}</span>
+                </li>
+              ))
+            }
+          </ul>
+        </figure>
+
+        <figure class="chart-card card reveal">
+          <figcaption class="chart-head">
+            <div>
+              <h2 class="chart-title" id="pillar-heading">Scores by ESG pillar</h2>
+              <p class="chart-sub">Environmental, social, and governance sub-scores by region (0–100)</p>
+            </div>
+            <span class="badge badge--coral"><span class="pulse-dot"></span>Illustrative</span>
+          </figcaption>
+
+          <div class="table-scroll" tabindex="0" role="region" aria-label="Pillar score table, scrollable">
+            <table class="data-table">
+              <caption class="sr-only">Illustrative ESG pillar scores by region</caption>
+              <thead>
+                <tr>
+                  <th scope="col">Region</th>
+                  <th scope="col">Environmental</th>
+                  <th scope="col">Social</th>
+                  <th scope="col">Governance</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  pillarScores.map((row) => (
+                    <tr>
+                      <th scope="row">{row.region}</th>
+                      <td>{row.e}</td>
+                      <td>{row.s}</td>
+                      <td>{row.g}</td>
+                    </tr>
+                  ))
+                }
+              </tbody>
+            </table>
+          </div>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--tight" aria-labelledby="materiality-heading">
+    <div class="container">
+      <figure class="chart-card card reveal">
+        <figcaption class="chart-head">
+          <div>
+            <h2 class="chart-title" id="materiality-heading">Draft materiality view</h2>
+            <p class="chart-sub">
+              Candidate topics assessed on impact materiality and financial materiality, as a
+              precursor to the materiality matrices developed in the study
+            </p>
+          </div>
+          <span class="badge badge--coral"><span class="pulse-dot"></span>Illustrative</span>
+        </figcaption>
+
+        <div class="table-scroll" tabindex="0" role="region" aria-label="Materiality assessment table, scrollable">
+          <table class="data-table">
+            <caption class="sr-only">Illustrative draft materiality assessment of candidate ESG topics</caption>
+            <thead>
+              <tr>
+                <th scope="col">Topic</th>
+                <th scope="col">Impact materiality</th>
+                <th scope="col">Financial materiality</th>
+              </tr>
+            </thead>
+            <tbody>
+              {
+                materiality.map((row) => (
+                  <tr>
+                    <th scope="row">{row.topic}</th>
+                    <td><span class:list={['level', `level--${row.impact.toLowerCase()}`]}>{row.impact}</span></td>
+                    <td><span class:list={['level', `level--${row.financial.toLowerCase()}`]}>{row.financial}</span></td>
+                  </tr>
+                ))
+              }
+            </tbody>
+          </table>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="status-heading">
+    <div class="container">
+      <div class="status-panel reveal" role="status">
+        <p class="status-title">
+          <span class="pulse-dot"></span>
+          <span id="status-heading">ESG Framework — Under Development</span>
+        </p>
+        <p>
+          The unified framework is being iteratively developed through multidisciplinary KPI
+          selection, materiality assessment, and stakeholder validation across the four focus
+          regions. The figures on this page are placeholders that demonstrate the structure of the
+          planned explorer: regional comparison, pillar breakdown, and materiality assessment.
+        </p>
+        <p class="status-note">
+          Validated indicators will replace them as fieldwork and Delphi validation conclude.
+        </p>
+        <div class="status-actions">
+          <a class="btn btn--primary" href="/research/methodology">How the indicators are developed</a>
+          <a class="btn btn--outline" href="/research/regions">Compare the regions</a>
+        </div>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .hero-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1.75rem;
+    padding: 0.55rem 1rem;
+    border-radius: var(--radius-pill);
+    background: rgba(249, 115, 22, 0.16);
+    border: 1px solid rgba(249, 115, 22, 0.4);
+    color: #ffedd5;
+    font-size: 0.875rem;
+  }
+
+  .kpi-grid {
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .kpi-card {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+  }
+
+  .kpi-value {
+    font-family: var(--font-display);
+    font-size: clamp(2.25rem, 4vw, 3rem);
+    font-weight: 700;
+    line-height: 1;
+    color: var(--navy-900);
+  }
+
+  .kpi-label {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    margin-top: 0.4rem;
+  }
+
+  .kpi-detail {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+  }
+
+  .dash-grid {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  }
+
+  .chart-card {
+    margin: 0;
+  }
+
+  .chart-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .chart-title {
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    margin-bottom: 0.25rem;
+  }
+
+  .chart-sub {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  .bar-chart {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 1rem;
+  }
+
+  .bar-row {
+    display: grid;
+    grid-template-columns: minmax(110px, 170px) 1fr 3ch;
+    align-items: center;
+    gap: 0.9rem;
+    margin: 0;
+  }
+
+  .bar-label {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--navy-800);
+  }
+
+  .bar-track {
+    display: block;
+    height: 14px;
+    border-radius: 999px;
+    background: var(--slate-100);
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    display: block;
+    height: 100%;
+    width: var(--bar-width);
+    border-radius: 999px;
+    background: var(--gradient-accent);
+  }
+
+  .bar-value {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--navy-900);
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .table-scroll {
+    overflow-x: auto;
+  }
+
+  .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+
+  .data-table th,
+  .data-table td {
+    text-align: left;
+    padding: 0.7rem 0.75rem;
+    border-bottom: 1px solid var(--slate-100);
+  }
+
+  .data-table thead th {
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    font-weight: 700;
+  }
+
+  .data-table tbody th {
+    font-weight: 600;
+    color: var(--navy-800);
+  }
+
+  .data-table td {
+    font-variant-numeric: tabular-nums;
+    color: var(--slate-600);
+  }
+
+  .level {
+    display: inline-flex;
+    padding: 0.2rem 0.65rem;
+    border-radius: var(--radius-pill);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .level--high {
+    background: var(--seafoam-100);
+    color: #0b5f57;
+  }
+
+  .level--medium {
+    background: #ffedd5;
+    color: #9a3412;
+  }
+
+  .level--low {
+    background: var(--slate-100);
+    color: var(--slate-600);
+  }
+
+  .status-panel {
+    border-left: 4px solid var(--coral-500);
+    border-radius: var(--radius-lg);
+    background: #fff7ed;
+    padding: clamp(1.5rem, 3vw, 2.25rem);
+    max-width: 78ch;
+  }
+
+  .status-title {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--navy-900);
+    margin-bottom: 0.75rem;
+  }
+
+  .status-note {
+    font-style: italic;
+    color: var(--slate-600);
+    font-size: 0.9375rem;
+  }
+
+  .status-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    margin-top: 1.5rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 540px) {
+    .bar-row {
+      grid-template-columns: 1fr 3ch;
+      grid-template-areas:
+        'label value'
+        'track track';
+      gap: 0.4rem 0.75rem;
+    }
+
+    .bar-label {
+      grid-area: label;
+    }
+
+    .bar-value {
+      grid-area: value;
+    }
+
+    .bar-track {
+      grid-area: track;
+    }
+  }
+</style>

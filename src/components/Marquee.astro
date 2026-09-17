@@ -1,0 +1,328 @@
+---
+import Modal from './Modal.astro';
+
+/**
+ * Horizontally drifting marquee of floating journey cards.
+ *
+ * The card set is rendered twice so the track can loop seamlessly; the second copy
+ * is hidden from assistive technology and removed from the tab order. Clicking or
+ * pressing Enter/Space on a card pauses the drift and opens the shared dialog.
+ *
+ * Under prefers-reduced-motion the animation never runs: the duplicate set is
+ * hidden and the cards lay out as a static two-column grid.
+ */
+export interface MarqueeItem {
+  id: string;
+  date: string;
+  category: string;
+  status: string;
+  title: string;
+  description: string;
+  details?: string;
+  image?: string;
+}
+
+interface Props {
+  items: MarqueeItem[];
+}
+
+const { items } = Astro.props;
+
+const statusLabels: Record<string, string> = {
+  completed: 'Completed',
+  'in-progress': 'In progress',
+  planned: 'Planned',
+};
+---
+
+<div class="marquee" data-marquee>
+  <div class="marquee-track" data-marquee-track>
+    {
+      [false, true].map((isClone) => (
+        <ul class="marquee-group" aria-hidden={isClone ? 'true' : undefined}>
+          {items.map((item, index) => (
+            <li class="marquee-item" style={`--bob-delay:${(index % 4) * 0.6}s`}>
+              <button
+                type="button"
+                class:list={['journey-card', `is-${item.status}`]}
+                tabindex={isClone ? -1 : 0}
+                data-journey-card
+                data-date={item.date}
+                data-category={item.category}
+                data-status={statusLabels[item.status] ?? item.status}
+                data-title={item.title}
+                data-description={item.description}
+                data-details={item.details ?? ''}
+                data-image={item.image ?? ''}
+                aria-label={`${item.date}: ${item.title}. Open details.`}
+              >
+                <span class="journey-meta">
+                  <span class="journey-date">{item.date}</span>
+                  <span class="badge badge--outline journey-category">{item.category}</span>
+                </span>
+                <span class="journey-title">{item.title}</span>
+                <span class="journey-preview">{item.description}</span>
+                <span class="journey-more" aria-hidden="true">
+                  Read more
+                  <svg viewBox="0 0 20 20" width="14" height="14" focusable="false">
+                    <path
+                      d="M4 10h11M11 5l5 5-5 5"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      ))
+    }
+  </div>
+</div>
+
+<Modal id="journey-modal" />
+
+<style>
+  .marquee {
+    position: relative;
+    overflow: hidden;
+    padding-block: 1.25rem 1.75rem;
+    /* soften both edges so cards fade in and out rather than being clipped */
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+
+  .marquee-track {
+    display: flex;
+    width: max-content;
+    animation: marqueeScroll 64s linear infinite;
+  }
+
+  /* Hovering, focusing or opening the dialog freezes both the drift and the bob,
+     so a card is never a moving target when someone goes to click it. */
+  .marquee:hover .marquee-track,
+  .marquee:focus-within .marquee-track,
+  .marquee.is-paused .marquee-track,
+  .marquee:hover .marquee-item,
+  .marquee:focus-within .marquee-item,
+  .marquee.is-paused .marquee-item {
+    animation-play-state: paused;
+  }
+
+  .marquee-group {
+    display: flex;
+    gap: clamp(1rem, 2vw, 1.5rem);
+    margin: 0;
+    padding: 0 clamp(0.5rem, 1vw, 0.75rem);
+    list-style: none;
+  }
+
+  .marquee-item {
+    margin: 0;
+    animation: floatBob 5s ease-in-out infinite;
+    animation-delay: var(--bob-delay, 0s);
+  }
+
+  .journey-card {
+    display: flex;
+    flex-direction: column;
+    width: 320px;
+    height: 100%;
+    min-height: 210px;
+    padding: 1.5rem;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--slate-100);
+    border-top: 3px solid var(--teal-600);
+    background: #ffffff;
+    box-shadow: var(--shadow-sm);
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease;
+  }
+
+  .journey-card.is-in-progress {
+    border-top-color: var(--coral-500);
+  }
+
+  .journey-card.is-planned {
+    border-top-color: var(--slate-400);
+  }
+
+  .journey-card:hover,
+  .journey-card:focus-visible {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: rgba(45, 212, 191, 0.55);
+  }
+
+  .journey-meta {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .journey-date {
+    font-family: var(--font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--teal-700);
+  }
+
+  .journey-category {
+    font-size: 0.6875rem;
+  }
+
+  .journey-title {
+    font-family: var(--font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--navy-900);
+    line-height: 1.25;
+    margin-bottom: 0.5rem;
+  }
+
+  .journey-preview {
+    font-size: 0.875rem;
+    color: var(--slate-600);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+
+  .journey-more {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 1rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    opacity: 0;
+    transition: opacity 0.18s ease;
+  }
+
+  .journey-card:hover .journey-more,
+  .journey-card:focus-visible .journey-more {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .marquee {
+      overflow: visible;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+
+    .marquee-track {
+      display: block;
+      width: 100%;
+      animation: none;
+    }
+
+    .marquee-group[aria-hidden='true'] {
+      display: none;
+    }
+
+    .marquee-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      padding: 0;
+    }
+
+    .marquee-item {
+      animation: none;
+    }
+
+    .journey-card {
+      width: 100%;
+    }
+
+    .journey-more {
+      opacity: 1;
+    }
+  }
+</style>
+
+<script>
+  const marquee = document.querySelector('[data-marquee]');
+  const dialog = document.getElementById('journey-modal');
+
+  if (marquee && dialog instanceof HTMLDialogElement) {
+    const field = (name: string) => dialog.querySelector(`[data-modal-${name}]`);
+    const dateEl = field('date');
+    const categoryEl = field('category');
+    const statusEl = field('status');
+    const titleEl = field('title');
+    const bodyEl = field('body');
+    const imageEl = field('image');
+
+    const open = (card: HTMLElement) => {
+      if (dateEl) dateEl.textContent = card.dataset.date ?? '';
+      if (categoryEl) categoryEl.textContent = card.dataset.category ?? '';
+      if (statusEl) statusEl.textContent = card.dataset.status ?? '';
+      if (titleEl) titleEl.textContent = card.dataset.title ?? '';
+
+      if (bodyEl) {
+        bodyEl.replaceChildren();
+        [card.dataset.description, card.dataset.details]
+          .filter((text): text is string => Boolean(text && text.trim()))
+          .forEach((text) => {
+            const p = document.createElement('p');
+            p.textContent = text;
+            bodyEl.appendChild(p);
+          });
+      }
+
+      if (imageEl instanceof HTMLImageElement) {
+        const src = card.dataset.image ?? '';
+        if (src) {
+          imageEl.src = src;
+          imageEl.alt = `Photograph from ${card.dataset.title ?? 'this milestone'}`;
+          imageEl.hidden = false;
+        } else {
+          imageEl.removeAttribute('src');
+          imageEl.alt = '';
+          imageEl.hidden = true;
+        }
+      }
+
+      marquee.classList.add('is-paused');
+      dialog.showModal();
+    };
+
+    marquee.querySelectorAll('[data-journey-card]').forEach((card) => {
+      if (!(card instanceof HTMLElement)) return;
+      card.addEventListener('click', () => open(card));
+
+      // Enter activates the button natively. Space is handled here so the page
+      // does not scroll; preventDefault suppresses the synthetic click, so the
+      // dialog is opened explicitly.
+      card.addEventListener('keydown', (event) => {
+        if (event.key !== ' ' && event.key !== 'Spacebar') return;
+        event.preventDefault();
+        open(card);
+      });
+    });
+
+    // Escape and the backdrop both resolve through the dialog's own close event,
+    // which also restores focus to the card that opened it.
+    dialog.addEventListener('close', () => marquee.classList.remove('is-paused'));
+
+    dialog.querySelector('[data-modal-close]')?.addEventListener('click', () => dialog.close());
+
+    // Clicking the backdrop (outside the panel) closes the dialog.
+    dialog.addEventListener('click', (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+</script>

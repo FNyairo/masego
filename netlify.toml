@@ -1,0 +1,43 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+
+[[redirects]]
+  from = "/esg-and-ports"
+  to = "/research/esg-and-ports"
+  status = 301
+
+[[redirects]]
+  from = "/regions"
+  to = "/research/regions"
+  status = 301
+
+[[redirects]]
+  from = "/methodology"
+  to = "/research/methodology"
+  status = 301
+
+[[redirects]]
+  from = "/outputs"
+  to = "/research/outputs"
+  status = 301
+
+[[redirects]]
+  from = "/journey"
+  to = "/research/journey"
+  status = 301
+
+[[redirects]]
+  from = "/*"
+  to = "/404.html"
+  status = 404
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

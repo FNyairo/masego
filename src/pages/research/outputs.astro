@@ -1,0 +1,241 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import { getCollection } from 'astro:content';
+
+const publications = await getCollection('publications');
+
+const typeOrder = ['journal', 'conference', 'policy-brief', 'working-paper', 'report', 'poster'] as const;
+
+const typeLabels: Record<string, string> = {
+  journal: 'Journal articles',
+  conference: 'Conference papers',
+  'policy-brief': 'Policy briefs',
+  'working-paper': 'Working papers',
+  report: 'Reports',
+  poster: 'Posters',
+};
+
+const statusLabels: Record<string, string> = {
+  published: 'Published',
+  forthcoming: 'Forthcoming',
+  'under-review': 'Under review',
+};
+
+const groups = typeOrder
+  .map((type) => ({
+    type,
+    label: typeLabels[type],
+    items: publications
+      .filter((item) => item.data.type === type)
+      .sort((a, b) => b.data.year - a.data.year),
+  }))
+  .filter((group) => group.items.length > 0);
+
+const description =
+  'Research outputs from the unified maritime ESG framework study: journal articles, conference papers, policy briefs, working papers, reports, and posters.';
+---
+
+<BaseLayout title="Research Outputs" description={description}>
+  <PageBanner
+    eyebrow="Outputs"
+    title="Publications and research outputs"
+    subtitle="Outputs from the doctoral research, grouped by type. Entries are updated as work moves from review to publication."
+    image="/images/banners/outputs.jpg"
+    fallback="https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="outputs-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Dissemination</p>
+        <h2 id="outputs-heading">What the research produces</h2>
+        <p class="lead">
+          The study contributes a unified ESG framework with multidisciplinary KPIs and materiality
+          matrices, an adapted reporting mechanism, and conceptual groundwork for a maritime GHG
+          Fund. Each is disseminated through the outputs below.
+        </p>
+        <p class="seed-note" role="note">
+          Entries shown here are seed records maintained through the content manager and are
+          updated as titles, venues, and identifiers are confirmed.
+        </p>
+      </div>
+
+      {
+        groups.length === 0 && (
+          <p class="empty-state card">
+            No outputs have been added yet. Publications will appear here as they are entered in the
+            content manager.
+          </p>
+        )
+      }
+
+      {
+        groups.map((group) => (
+          <section class="output-group" aria-labelledby={`group-${group.type}`}>
+            <h3 class="group-heading" id={`group-${group.type}`}>
+              {group.label}
+            </h3>
+            <ul class="output-list">
+              {group.items.map((item) => (
+                <li class="output-card card reveal">
+                  <div class="output-meta">
+                    <span class="output-year">{item.data.year}</span>
+                    <span
+                      class:list={[
+                        'badge',
+                        item.data.status === 'published' ? '' : 'badge--coral',
+                      ]}
+                    >
+                      {statusLabels[item.data.status]}
+                    </span>
+                  </div>
+
+                  <h4 class="output-title">{item.data.title}</h4>
+
+                  {item.data.authors.length > 0 && (
+                    <p class="output-authors">{item.data.authors.join(', ')}</p>
+                  )}
+
+                  {item.data.journal && <p class="output-venue">{item.data.journal}</p>}
+                  {item.data.conference && <p class="output-venue">{item.data.conference}</p>}
+
+                  {item.data.abstract && <p class="output-abstract">{item.data.abstract}</p>}
+
+                  <div class="output-links">
+                    {item.data.doi && (
+                      <a href={`https://doi.org/${item.data.doi.replace(/^https?:\/\/doi\.org\//, '')}`} target="_blank" rel="noopener noreferrer">
+                        DOI: {item.data.doi}
+                      </a>
+                    )}
+                    {item.data.url && (
+                      <a href={item.data.url} target="_blank" rel="noopener noreferrer">
+                        Read the output
+                        <span class="sr-only"> (opens in a new tab)</span>
+                      </a>
+                    )}
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        ))
+      }
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="collaborate-heading">
+    <div class="container container--narrow reveal">
+      <p class="eyebrow">Collaboration</p>
+      <h2 id="collaborate-heading">Interested in co-authoring or hosting a presentation?</h2>
+      <p class="lead">
+        The research welcomes collaboration with academic colleagues, port authorities, and
+        industry bodies, particularly on comparative ESG data and validation workshops.
+      </p>
+      <a class="btn btn--primary" href="/contact">Get in touch</a>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .seed-note {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    font-style: italic;
+    margin: 0;
+  }
+
+  .output-group {
+    margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
+  }
+
+  .group-heading {
+    font-size: 1.125rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--slate-500);
+    font-family: var(--font-sans);
+    font-weight: 700;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--slate-100);
+    margin-bottom: 1.5rem;
+  }
+
+  .output-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: clamp(1rem, 2vw, 1.4rem);
+  }
+
+  .output-card {
+    margin: 0;
+  }
+
+  .output-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .output-year {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+
+  .output-title {
+    font-size: 1.1875rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .output-authors {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--teal-700);
+    margin-bottom: 0.25rem;
+  }
+
+  .output-venue {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    margin-bottom: 0.9rem;
+  }
+
+  .output-abstract {
+    font-size: 0.9375rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .output-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .empty-state {
+    color: var(--slate-500);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>

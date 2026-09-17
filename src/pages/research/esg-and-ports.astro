@@ -1,0 +1,292 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import PageBanner from '../../components/PageBanner.astro';
+import FlipCard from '../../components/FlipCard.astro';
+import { getCollection } from 'astro:content';
+
+const frameworks = (await getCollection('frameworks')).sort((a, b) => a.data.order - b.data.order);
+
+const dimensions = [
+  {
+    id: 'dimension-environmental',
+    icon: 'environmental' as const,
+    letter: 'E',
+    title: 'Environmental',
+    tagline: "Reducing maritime's footprint on the planet",
+    description:
+      'The footprint of vessels at sea and port operations on land — increasingly measured, disclosed, and priced.',
+    points: [
+      'Greenhouse gas emissions',
+      'Air and water quality',
+      'Waste management',
+      'Biodiversity',
+      'Energy transition',
+      'Climate resilience',
+    ],
+  },
+  {
+    id: 'dimension-social',
+    icon: 'social' as const,
+    letter: 'S',
+    title: 'Social',
+    tagline: 'People, communities, and labour rights',
+    description:
+      'The people who work at sea and on the quay, and the communities alongside port activity — the dimension carrying most weight in emerging regions.',
+    points: [
+      'Labour rights',
+      'Health and safety',
+      'Community engagement',
+      'Gender equity',
+      'Local economic development',
+      'Workforce wellbeing',
+    ],
+  },
+  {
+    id: 'dimension-governance',
+    icon: 'governance' as const,
+    letter: 'G',
+    title: 'Governance',
+    tagline: 'Transparency, accountability, and ethics',
+    description:
+      'How sustainability is overseen, evidenced, and accounted for — what determines whether environmental and social claims can be trusted.',
+    points: [
+      'Board accountability',
+      'Anti-corruption',
+      'Transparency',
+      'Stakeholder voice',
+      'Regulatory compliance',
+      'Risk management',
+    ],
+  },
+];
+
+const scopeLabels: Record<string, string> = {
+  global: 'Global',
+  maritime: 'Maritime',
+  regional: 'Regional',
+  sectoral: 'Sectoral',
+};
+
+const description =
+  'What ESG means in the maritime context: the environmental, social, and governance dimensions for ports and shipping, and the standards shaping practice.';
+---
+
+<BaseLayout title="ESG & Ports" description={description}>
+  <PageBanner
+    eyebrow="ESG & Ports"
+    title="What ESG means in the maritime context"
+    subtitle="Environmental, social, and governance practice reaches ports and shipping companies through regulation, finance, and commercial pressure. This section sets out the three dimensions as they apply to the sector, and the standards currently used to measure them."
+    image="/images/banners/esg-and-ports.jpg"
+    fallback="https://images.unsplash.com/photo-1516216628859-9bccecab13ca?w=1600&q=80"
+  />
+
+  <section class="section" aria-labelledby="what-is-esg-heading">
+    <div class="container container--narrow prose-block reveal">
+      <p class="eyebrow">Definition</p>
+      <h2 id="what-is-esg-heading">ESG in ports and shipping</h2>
+      <p class="lead">
+        ESG describes the environmental, social, and governance factors used to assess how an
+        organisation manages its impacts and its exposure to sustainability risk. In most sectors
+        ESG applies to a single site type or a single workforce. In maritime it has to cover two:
+        a mobile fleet operating across jurisdictions, and fixed port infrastructure embedded in a
+        local community.
+      </p>
+      <p>
+        That dual footprint is why generic frameworks fit the sector poorly. A port authority
+        reports on land use, community air quality, and concession governance; a shipping company
+        reports on fuel consumption, crew welfare across flag states, and charterer requirements.
+        Both are measured today with instruments built for manufacturing, energy, or general
+        corporate reporting, and the resulting data is difficult to compare between organisations,
+        and harder still between regions.
+      </p>
+      <p>
+        The research treats this as a framework design problem rather than a compliance problem.
+        If indicators are not material to maritime operations, and not collectable by the
+        organisations expected to report them, disclosure becomes an administrative exercise that
+        does not improve sustainability performance.
+      </p>
+    </div>
+  </section>
+
+  <section class="section section--soft" aria-labelledby="dimensions-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Three dimensions</p>
+        <h2 id="dimensions-heading">Environmental, social, and governance in maritime terms</h2>
+      </div>
+
+      <p class="flip-hint-note">Select a card to turn it over and see what each dimension covers.</p>
+
+      <div class="flip-grid reveal">
+        {dimensions.map((dimension) => <FlipCard {...dimension} />)}
+      </div>
+
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="frameworks-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow">Standards and initiatives</p>
+        <h2 id="frameworks-heading">The frameworks shaping maritime ESG</h2>
+        <p class="lead">
+          Nine frameworks carry most of the weight in current practice. They differ in what they
+          measure, who they answer to, and whether they are voluntary or mandatory — which is
+          precisely where fragmentation begins.
+        </p>
+      </div>
+
+      <div class="framework-grid">
+        {
+          frameworks.map((framework) => (
+            <article class="card framework-card reveal">
+              <div class="framework-head">
+                <span class="framework-abbr">{framework.data.abbreviation}</span>
+                <span class="badge badge--navy">{scopeLabels[framework.data.scope]}</span>
+              </div>
+              <h3 class="framework-name">{framework.data.fullName}</h3>
+              <p class="framework-desc">{framework.data.description}</p>
+              <p class="framework-relevance">
+                <span class="framework-relevance-label">Relevance to this research</span>
+                {framework.data.relevance}
+              </p>
+              {framework.data.url && (
+                <a class="framework-link" href={framework.data.url} target="_blank" rel="noopener noreferrer">
+                  Visit source
+                  <span class="sr-only"> for {framework.data.name} (opens in a new tab)</span>
+                </a>
+              )}
+            </article>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy" aria-labelledby="next-heading">
+    <div class="container">
+      <div class="section-head reveal">
+        <p class="eyebrow eyebrow--light">Next</p>
+        <h2 id="next-heading">How the picture differs by region</h2>
+        <p class="lead why-lead">
+          The same nine frameworks produce very different practice depending on where a port or
+          operator sits. The regional comparison sets out what that looks like across the Nordic
+          region, the European Union, Turkey, and South Africa.
+        </p>
+      </div>
+      <div class="next-actions reveal">
+        <a class="btn btn--primary" href="/research/regions">View the regions</a>
+        <a class="btn btn--ghost" href="/knowledge-hub">Browse the knowledge hub</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section-head {
+    max-width: 64ch;
+    margin-bottom: clamp(2rem, 4vw, 2.75rem);
+  }
+
+  .why-lead {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .framework-grid {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+
+  .flip-grid {
+    display: grid;
+    gap: clamp(1.25rem, 2.5vw, 1.75rem);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  @media (max-width: 900px) {
+    .flip-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .flip-hint-note {
+    font-size: 0.875rem;
+    color: var(--slate-500);
+    margin-bottom: 1.25rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flip-hint-note {
+      display: none;
+    }
+  }
+
+  .framework-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .framework-abbr {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+
+  .framework-name {
+    font-size: 1.0625rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .framework-desc {
+    font-size: 0.9375rem;
+    margin-bottom: 0.9rem;
+  }
+
+  .framework-relevance {
+    font-size: 0.875rem;
+    color: var(--slate-600);
+    background: var(--sand-50);
+    border-left: 3px solid var(--teal-400);
+    border-radius: 0 8px 8px 0;
+    padding: 0.75rem 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+  .framework-relevance-label {
+    display: block;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal-700);
+    margin-bottom: 0.3rem;
+  }
+
+  .framework-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  .next-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+</style>
